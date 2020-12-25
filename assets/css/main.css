@@ -1,0 +1,127 @@
+
+ li {
+  list-style:none;
+}
+
+ #wrapper {
+    overflow-x: hidden;
+ }
+
+ #dag-panel {
+  min-width: 100vw;
+  height: 100%;
+}
+
+#sidebar-wrapper {
+  min-height: 100vh;
+  margin-left: -15rem;
+  -webkit-transition: margin .25s ease-out;
+  -moz-transition: margin .25s ease-out;
+  -o-transition: margin .25s ease-out;
+  transition: margin .25s ease-out;
+}
+
+#sidebar-wrapper .sidebar-heading {
+  padding: 0.875rem 1.25rem;
+  font-size: 1.2rem;
+}
+
+#config-menu {
+  width: 15rem;
+}
+
+#page-content-wrapper {
+  min-width: 100vw;
+}
+
+#wrapper.toggled #sidebar-wrapper {
+  margin-left: 0;
+}
+
+@media (min-width: 768px) {
+  #sidebar-wrapper {
+    margin-left: 0;
+  }
+
+  #page-content-wrapper {
+    min-width: 0;
+    width: 100%;
+  }
+
+  #wrapper.toggled #sidebar-wrapper {
+    margin-left: -15rem;
+  }
+
+  #dag-panel {
+    min-width: 0;
+    width: 100%;
+  }
+}
+
+@media (max-width: 350px) {
+  #search-bar-nav {
+    padding-left: 0em;
+  }
+}
+
+.nav-button {
+  color: rgba(0,0,0,.5);
+  border-color: rgba(0,0,0,.1);
+  padding: .25rem .75rem;
+  font-size: 1.25rem;
+  line-height: 1;
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: .25rem;
+  color: rgba(0,0,0,.5);
+  border-color: rgba(0,0,0,.1);
+}
+
+.nav-button .fa-cog {
+  display: inline-block;
+  width: 1.5em;
+  height: 1.5em;
+  vertical-align: middle;
+  background: no-repeat center center;
+  background-size: 100% 100%;
+}
+
+.nav-button .fa-search {
+  display: inline-block;
+  width: 1em;
+  height: 1.5em;
+  vertical-align: middle;
+  background: no-repeat center center;
+  background-size: 100% 100%;
+}
+
+#search-bar-nav {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: left;
+}
+
+#sidebar-heading-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1m;
+  margin: 0.1em;
+}
+
+#sidebar-heading-icon img{
+  padding-bottom: 0.2em;
+  opacity: 0.7; 
+}
+
+#sidebar-heading-subtitle {
+  display: block;
+  color: grey;
+  font-size: 0.6em;
+}
+
+#language-dropdown span {
+  margin-right: 0.5em;
+};
+
+/* DAG Style */
+
