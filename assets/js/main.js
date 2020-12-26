@@ -31,7 +31,7 @@ var app = new Vue({
 function searchWord(){
   if (app.query !== undefined) {
     var root_node = undefined;
-    getAncestors(app.query, locale_to_lang[i18n.locale], function(node) {
+    getAncestors(app.query.toLowerCase(), locale_to_lang[i18n.locale], function(node) {
       var is_root = root_node === undefined;
       addNode(node, is_root)
       app.graph[node.id] = node;
@@ -57,7 +57,7 @@ $('.advancedAutoComplete').autoComplete({
   events: {
       search: function (qry, callback) {
           if (qry.trim().split(' ')[0].length >= 4) {
-            getWords(qry, locale_to_lang[i18n.locale], function(data) {
+            getWords(qry.toLowerCase(), locale_to_lang[i18n.locale], function(data) {
               callback(data.map(x => {return x.word}));
             });
         }

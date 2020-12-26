@@ -72,7 +72,9 @@ function addNode(data, is_root=False) {
   }
   g.setNode(data.id, {label: data.label})
   data.relatives.forEach(element => {
-    g.setEdge(element, data.id, {})
+    g.setEdge(element, data.id, {
+      curve: d3.curveBasis
+    })
   });
   renderDAG()
 }
