@@ -1,6 +1,6 @@
 
 const DAG_ELEMENT_ID = 'dag-panel'
-const DEFAULT_SCALE = 0.8;
+const DEFAULT_SCALE = 1;
 
 function initDAG() {
     g = new dagreD3.graphlib.Graph({directed:true, compound:true, multigraph:false})
@@ -46,11 +46,6 @@ function renderDAG() {
   });
 
   render(svgGroup, g);
-  
-  // Center the graph
-  var xCenterOffset = (svg_rect.width - g.graph().width) / 2;
-  svgGroup.attr("transform", "translate(" + xCenterOffset + ", 20)");
-  svg.attr("height", g.graph().height + 40);
 
   // Zoom
   var zoom = d3.zoom()
@@ -60,26 +55,10 @@ function renderDAG() {
       });
   svg.call(zoom);
 
-  // Only initial render
-  if (initial_render) {
-    zoom.transform(svg, d3.zoomIdentity.scale(1));
-    zoom.scaleBy(svg, DEFAULT_SCALE);
-    zoom.translateBy(svg, (svg_rect.width*DEFAULT_SCALE/2) - g.node(root_node).x + 200,   (svg_rect.height*DEFAULT_SCALE/2) - (g.node(root_node).y)); 
-    initial_render = false;
-  }
-  else {
-    // // Center graph on root node
-    //   svg.transition()
-    //     .delay(500)
-    //     .duration(700)
-    //     .call(zoom.transform, function() {
-    //       try {
-    //         d3.zoomIdentity.translate((svg_rect.width/2)-g.node(root_node).x, (svg_rect.height/2)-g.node(root_node).y);
-    //       } catch {
-             
-    //       };
-    //     });
-   }
+  zoom.transform(svg, d3.zoomIdentity.scale(1));
+  zoom.scaleBy(svg, DEFAULT_SCALE);
+  zoom.translateBy(svg, svg_rect.width*DEFAULT_SCALE/2 - g.node(root_node).x,   20*DEFAULT_SCALE); 
+  initial_render = false;
 }
 
 g = initDAG()
