@@ -33,6 +33,7 @@ function searchWord(){
     var root_node = undefined;
     getAncestors(app.query.toLowerCase(), locale_to_lang[i18n.locale], function(node) {
       var is_root = root_node === undefined;
+      root_node = node.id;
       addNode(node, is_root)
       app.graph[node.id] = node;
     });

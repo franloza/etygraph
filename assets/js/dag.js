@@ -1,6 +1,7 @@
 
 const DAG_ELEMENT_ID = 'dag-panel'
 const DEFAULT_SCALE = 1;
+const LANGUAGE_MAP = loadLanguageMap();
 
 function initDAG() {
     g = new dagreD3.graphlib.Graph({directed:true, compound:true, multigraph:false})
@@ -69,12 +70,56 @@ var initial_render = true;
 function addNode(data, is_root=False) {
   if (is_root) {
     root_node = data.id
+    var node_class = "root";
   }
-  g.setNode(data.id, {label: data.label})
+  else {
+    var node_class = "non-root";
+  }
+  console.log(is_root);
+  g.setNode(data.id, 
+    {
+      labelType: "html",
+      label: function() {
+        var table = document.createElement("table"),
+        tr = d3.select(table).append("tr");
+        var label_row = tr.append("td").append("div");
+        label_row.text(data.label);
+        label_row.attr("class", "word_label");
+        tr = d3.select(table).append("tr");
+        if (LANGUAGE_MAP[data.lang] != undefined) {
+          language_name = LANGUAGE_MAP[data.lang];
+          var lang_row = tr.append("td").append("div");
+          lang_row.attr("class", "word_lang");
+          lang_row.text(language_name)
+        }
+        return table;
+      },
+      class: node_class
+     
+    })
   data.relatives.forEach(element => {
     g.setEdge(element, data.id, {
       curve: d3.curveBasis
     })
   });
   renderDAG()
+}
+
+function loadLanguageMap() {
+  var map = {};
+  var csv = d3.dsvFormat(";");
+  d3.text("./assets/data/language_codes.csv", function(error, rows){
+    if (error) {
+      throw error;
+    }
+    var rows = csv.parse(rows);
+    rows.forEach(function(line) {
+      var language_code = line['code'];
+      var language_name = line['canonical name'];
+      map[language_code] = language_name;
+    });
+
+  });
+
+  return map;
 }
