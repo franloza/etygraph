@@ -11,6 +11,16 @@ export function getAncestors(word, lang, callback, recursive = true) {
     _getAncestors(word_uri, callback, recursive, 1, [], result)
 }
 
+export function mergeNode(node_a, node_b) {
+  var node_a_labels = node_a.label.split(',');
+  node_a_labels = node_a_labels.concat(node_b.label.split(","));
+  node_a.label = [...(new Set(node_a_labels))].join(",")
+  node_a.relatives = new Set([...node_a.relatives, ...node_b.relatives])
+  node_a.equivalents = new Set([...node_a.equivalents, ...node_b.equivalents])
+  node_a.links == new Set([...node_a.links, ...node_b.links])
+  return node_a
+}
+
 
 function _getAncestors(uri, callback, recursive, depth, processed, result,
     equivalent=undefined
@@ -20,11 +30,8 @@ function _getAncestors(uri, callback, recursive, depth, processed, result,
 
       if (equivalent !== undefined && result[equivalent.id] !== undefined) {
         // Merge node
-        var node = result[equivalent.id]
-        node.label +=  (',' + parsed.label);
-        node.relatives = new Set([...node.relatives, parsed.relatives])
-        node.equivalents = new Set([...node.equivalents, parsed.equivalents])
-        node.links == new Set([...node.links, parsed.links])
+        var node = result[equivalent.id];
+        result[equivalent.id] = mergeNode(node, parsed)
         delete result[parsed.id];
       }
       else {
