@@ -11,16 +11,36 @@
     stroke-width: 1.5px;
     }
 
+.dag .root rect{
+    fill: indianred;
+    fill-opacity: 0.3;
+    stroke-width: 2px;
+    stroke: black;
+}
+    
 .dag .edgePath path {
     stroke: #333;
     stroke-width: 1.5px;
 }
 
-.dag table {
+.dag .label table {
     border-spacing: 0;
+    line-height: 0.5em;
+    height: 0px;
 }
 
-.dag table td {
-    padding: 7px;
+.dag .label td {
+    padding: 6px;
+}
+
+.dag .label .word_label {
+    color: black;
+    font-size: 1em;
+}
+
+.dag .label .word_lang {
+    color: grey;
+    font-style: italic;
+    font-size: 0.8em;
 }
   
