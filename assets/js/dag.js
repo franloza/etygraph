@@ -48,6 +48,22 @@ function renderDAG() {
 
   render(svgGroup, g);
 
+  // Adjust nodes size to make it responsive
+  var labels_height = [], labels_width = []
+  d3.selectAll("g .label foreignObject").each(
+    function () {
+      labels_height.push(parseInt(d3.select(this).attr("height")));
+      labels_width.push(parseInt(d3.select(this).attr("width")));
+    }
+  );
+  d3.selectAll(".node")
+      .select("rect")
+      .attr("height", function(d,i){
+        return labels_height[i] + 20;
+      }).attr("width", function(d,i){
+        return labels_width[i] + 20;
+      });
+
   // Zoom
   var zoom = d3.zoom()
       .scaleExtent([0.02, 8])
@@ -66,6 +82,11 @@ g = initDAG()
 var root_node = undefined;
 var initial_render = true;
 
+function getShortId(id) {
+  short_id = id.split("/");
+  return short_id[short_id.length - 2] + short_id[short_id.length - 1];
+}
+
 // Add nodes and edges from API node data
 function addNode(data, is_root=False) {
   if (is_root) {
@@ -75,13 +96,16 @@ function addNode(data, is_root=False) {
   else {
     var node_class = "non-root";
   }
-  console.log(is_root);
+  var short_id = getShortId(data.id);
   g.setNode(data.id, 
     {
       labelType: "html",
       label: function() {
         var table = document.createElement("table"),
         tr = d3.select(table).append("tr");
+        table.setAttribute("id", `node-${short_id}`);
+        table.setAttribute("width", "auto");
+        table.setAttribute("height", "auto");
         var label_row = tr.append("td").append("div");
         label_row.text(data.label);
         label_row.attr("class", "word_label");
@@ -95,7 +119,6 @@ function addNode(data, is_root=False) {
         return table;
       },
       class: node_class
-     
     })
   data.relatives.forEach(element => {
     g.setEdge(element, data.id, {
