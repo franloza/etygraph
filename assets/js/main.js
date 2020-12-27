@@ -48,6 +48,17 @@ $(document).ready(function () {
       $("#wrapper").toggleClass("toggled");
     });
 
+    $("#clear-dag").click(function(e) {
+      app.graph = {};
+      clearDAG();
+      $('#query-input').val('');
+    });
+
+    $('#query-input').focus(
+      function(){
+          $(this).val('');
+      });
+
 });
 
 $('.advancedAutoComplete').autoComplete({
@@ -67,6 +78,8 @@ $('.advancedAutoComplete').autoComplete({
 }).on( "autocomplete.select", function (evt, item)  {
     app.query = item;
     searchWord(evt)
-});;
+});
+
+
 
 

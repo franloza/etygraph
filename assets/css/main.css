@@ -77,7 +77,7 @@
   border-color: rgba(0,0,0,.1);
 }
 
-.nav-button .fa-cog {
+.nav-button-fa  {
   display: inline-block;
   width: 1.5em;
   height: 1.5em;
@@ -86,13 +86,8 @@
   background-size: 100% 100%;
 }
 
-.nav-button .fa-search {
-  display: inline-block;
-  width: 1em;
-  height: 1.5em;
-  vertical-align: middle;
-  background: no-repeat center center;
-  background-size: 100% 100%;
+.navbar button {
+  margin: 0.1em;
 }
 
 #search-bar-nav {

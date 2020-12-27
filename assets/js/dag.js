@@ -3,6 +3,10 @@ const DAG_ELEMENT_ID = 'dag-panel'
 const DEFAULT_SCALE = 1;
 const LANGUAGE_MAP = loadLanguageMap();
 
+g = initDAG()
+var root_node = undefined;
+var initial_render = true;
+
 function initDAG() {
     g = new dagreD3.graphlib.Graph({directed:true, compound:true, multigraph:false})
     .setGraph({})
@@ -21,6 +25,12 @@ function initDAG() {
     };
 
     return g
+}
+
+function clearDAG() {
+  initial_render = true;
+  g = initDAG();
+  d3.select(`#${DAG_ELEMENT_ID}`).select('g').remove();
 }
 
 function renderDAG() {
@@ -59,9 +69,9 @@ function renderDAG() {
   d3.selectAll(".node")
       .select("rect")
       .attr("height", function(d,i){
-        return labels_height[i] + 20;
+        return (labels_height[i] || 0) + 20;
       }).attr("width", function(d,i){
-        return labels_width[i] + 20;
+        return (labels_width[i] || 0) + 20;
       });
 
   // Zoom
@@ -77,10 +87,6 @@ function renderDAG() {
   zoom.translateBy(svg, svg_rect.width*DEFAULT_SCALE/2 - g.node(root_node).x,   20*DEFAULT_SCALE); 
   initial_render = false;
 }
-
-g = initDAG()
-var root_node = undefined;
-var initial_render = true;
 
 function getShortId(id) {
   short_id = id.split("/");
