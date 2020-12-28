@@ -31,12 +31,26 @@ var app = new Vue({
 function searchWord(){
   if (app.query !== undefined) {
     var root_node = undefined;
-    getAncestors(app.query.toLowerCase(), locale_to_lang[i18n.locale], function(node) {
-      var is_root = root_node === undefined;
-      root_node = node.id;
-      addNode(node, is_root)
-      app.graph[node.id] = node;
-    });
+    var spinner = $("#loading-spinner-outer");
+    spinner.removeAttr("style").css({'height': '100%', 'opacity': '100%'});
+
+    getAncestors(
+      app.query.toLowerCase(), 
+      locale_to_lang[i18n.locale], 
+      function(node) {
+        var is_root = root_node === undefined;
+        root_node = node.id;
+        addNode(node, is_root);
+        app.graph[node.id] = node;
+      },
+      function(){
+        spinner.removeAttr("style").css({
+          'opacity' : '0%',
+          'height' : '0%'
+        });
+        renderDAG();
+      }
+    );
   }
   return true;
 }
