@@ -93,6 +93,7 @@ function getShortId(id) {
   return short_id[short_id.length - 2] + short_id[short_id.length - 1];
 }
 
+
 // Add nodes and edges from API node data
 function addNode(data, is_root=False) {
   if (is_root) {
@@ -131,7 +132,6 @@ function addNode(data, is_root=False) {
       curve: d3.curveBasis
     })
   });
-  renderDAG()
 }
 
 function loadLanguageMap() {
