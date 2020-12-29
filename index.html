@@ -73,6 +73,12 @@
 					<button class="nav-button" type="button" id="clear-dag">
 						<div class="icon"><span class="nav-button-fa fas fa-eraser"></span></div>
 					</button>	
+					<button class="nav-button" type="button" id="zoom-to-root">
+						<div class="icon"><span class="nav-button-fa fa fa-compress"></span></div>
+					</button>
+					<button class="nav-button" type="button" id="zoom-fit-content">
+						<div class="icon"><span class="nav-button-fa fas fa-expand-arrows-alt"></span></div>
+					</button>
 					<nav class="navbar mr-auto bg-light" id="search-bar-nav">
 						<input id="query-input" v-model="query" class="form-control advancedAutoComplete" type="text" autocomplete="on" :placeholder="[[ $t('message.search') ]]" aria-label="Search" v-on:keyup.enter="searchWord">
 						<button class="nav-button" type="button" id="search-submit" v-on:click="searchWord">

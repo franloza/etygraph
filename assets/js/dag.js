@@ -33,14 +33,21 @@ function clearDAG() {
   d3.select(`#${DAG_ELEMENT_ID}`).select('g').remove();
 }
 
+function getZoom(svg) {
+  return d3.zoom()
+           .scaleExtent([0.02, 8])
+          .on("zoom", function() {
+            svg.attr("transform", d3.event.transform)
+          });
+}
+
 function renderDAG() {
 
   // Create the renderer
   var render = new dagreD3.render();
 
   // Set up an SVG group so that we can translate the final graph.
-  var svg_element = document.getElementById(DAG_ELEMENT_ID);
-  var svg_rect = svg_element.getBoundingClientRect(); // get the bounding rectangle
+  var svg_rect = document.getElementById(DAG_ELEMENT_ID).getBoundingClientRect();
   var svg = d3.select(`#${DAG_ELEMENT_ID}`)
               .attr("preserveAspectRatio", "xMinYMin meet")
               .attr("viewBox", "0 0 " + svg_rect.width + " " + svg_rect.height);
@@ -56,7 +63,9 @@ function renderDAG() {
     node.rx = node.ry = 5;
   });
 
+  zoomToRootNode();
   render(svgGroup, g);
+  zoomToRootNode();
 
   // Adjust nodes size to make it responsive
   var labels_height = [], labels_width = []
@@ -74,17 +83,6 @@ function renderDAG() {
         return (labels_width[i] || 0) + 20;
       });
 
-  // Zoom
-  var zoom = d3.zoom()
-      .scaleExtent([0.02, 8])
-    	.on("zoom", function() {
-        svgGroup.attr("transform", d3.event.transform)
-      });
-  svg.call(zoom);
-
-  zoom.transform(svg, d3.zoomIdentity.scale(1));
-  zoom.scaleBy(svg, DEFAULT_SCALE);
-  zoom.translateBy(svg, svg_rect.width*DEFAULT_SCALE/2 - g.node(root_node).x,   20*DEFAULT_SCALE); 
   initial_render = false;
 }
 
@@ -151,4 +149,27 @@ function loadLanguageMap() {
   });
 
   return map;
+}
+
+function zoomFitContent(){
+  var svg = d3.select(`#${DAG_ELEMENT_ID}`), svgGroup = svg.select("g");
+  var svg_rect = document.getElementById(DAG_ELEMENT_ID).getBoundingClientRect();
+  var zoom = getZoom(svgGroup);
+  var padding = 20;
+  var hRatio = DEFAULT_SCALE/2 * (svg_rect.height / g.graph().height);
+  var wRatio = DEFAULT_SCALE/2 * (svg_rect.width / g.graph().width);
+  svg.call(zoom);
+  zoom.transform(svg, d3.zoomIdentity.scale(1));
+  zoom.translateBy(svg, (svg_rect.width*DEFAULT_SCALE- g.graph().width)/2, (svg_rect.height*DEFAULT_SCALE- g.graph().height)/2); 
+  zoom.scaleBy(svg, hRatio < wRatio ? hRatio : wRatio);
+}
+
+function zoomToRootNode(){
+  var svg = d3.select(`#${DAG_ELEMENT_ID}`), svgGroup = svg.select("g");
+  var svg_rect = document.getElementById(DAG_ELEMENT_ID).getBoundingClientRect();
+  var zoom = getZoom(svgGroup);
+  svg.call(zoom);
+  zoom.transform(svg, d3.zoomIdentity.scale(1));
+  zoom.scaleBy(svg, DEFAULT_SCALE);
+  zoom.translateBy(svg, svg_rect.width*DEFAULT_SCALE/2 - g.node(root_node).x, (svg_rect.height*DEFAULT_SCALE/2)-g.node(root_node).y); 
 }

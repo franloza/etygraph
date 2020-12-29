@@ -58,22 +58,32 @@ function searchWord(){
 }
 
 $(document).ready(function () {
-
+  // Listeners
   $("#menu-toggle").click(function(e) {
       e.preventDefault();
       $("#wrapper").toggleClass("toggled");
     });
 
-    $("#clear-dag").click(function(e) {
-      app.graph = {};
-      clearDAG();
-      $('#query-input').val('');
+  $("#clear-dag").click(function(e) {
+    app.graph = {};
+    clearDAG();
+    $('#query-input').val('');
+  });
+
+  $('#query-input').focus(
+    function(){
+        $(this).val('');
     });
 
-    $('#query-input').focus(
-      function(){
-          $(this).val('');
-      });
+  $('#zoom-to-root').click(function(e) {
+    e.preventDefault();
+    zoomToRootNode();
+  });
+
+  $('#zoom-fit-content').click(function(e) {
+    e.preventDefault();
+    zoomFitContent();
+  });
 
 });
 
