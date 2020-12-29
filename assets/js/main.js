@@ -48,7 +48,9 @@ function searchWord(){
           'opacity' : '0%',
           'height' : '0%'
         });
-        renderDAG();
+        if (Object.keys(app.graph).length > 0) {
+          renderDAG();
+        }
       }
     );
   }

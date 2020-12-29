@@ -31,29 +31,33 @@ function _getAncestors(uri, on_add_node_callback, on_finish_callback, recursive,
       pending.pop();
       var parsed = parseResponse(data);
 
-      if (equivalent !== undefined && result[equivalent.id] !== undefined) {
-        // Merge node
-        var node = result[equivalent.id];
-        result[equivalent.id] = mergeNode(node, parsed)
-        delete result[parsed.id];
-      }
-      else {
-        var node = parsed;
-        result[parsed.id] = parsed;
-      }
-      on_add_node_callback(node);
-      processed.push(parsed.id);
-      if (recursive && depth < MAX_DEPTH) {
-        parsed.relatives.forEach(element => {
-          if (!processed.includes(element)) {
-            _getAncestors(element, on_add_node_callback, on_finish_callback, recursive, depth+1, processed, result, pending)
-          }
-        });
-        parsed.equivalents.forEach(element => {
-          if (!processed.includes(element)) {
-            _getAncestors(element, on_add_node_callback, on_finish_callback, recursive, depth, processed, result, pending, parsed)
-          }
-        });        
+      if (parsed == undefined) {
+          processed.push(parsed);
+      } else {
+        if (equivalent !== undefined && result[equivalent.id] !== undefined) {
+          // Merge node
+          var node = result[equivalent.id];
+          result[equivalent.id] = mergeNode(node, parsed)
+          delete result[parsed.id];
+        }
+        else {
+          var node = parsed;
+          result[parsed.id] = parsed;
+        }
+        on_add_node_callback(node);
+        processed.push(parsed.id);
+        if (recursive && depth < MAX_DEPTH) {
+          parsed.relatives.forEach(element => {
+            if (!processed.includes(element)) {
+              _getAncestors(element, on_add_node_callback, on_finish_callback, recursive, depth+1, processed, result, pending)
+            }
+          });
+          parsed.equivalents.forEach(element => {
+            if (!processed.includes(element)) {
+              _getAncestors(element, on_add_node_callback, on_finish_callback, recursive, depth, processed, result, pending, parsed)
+            }
+          });        
+        }
       }
       if (pending.length == 0) {
         on_finish_callback()
