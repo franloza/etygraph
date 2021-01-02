@@ -42,7 +42,10 @@ function searchWord(){
           query_node_id = node.id;
         }
         if (node.is_queried == undefined || !node.is_queried) {
-          node.is_queried = node.id == query_node_id;
+          node.is_queried = (node.id == query_node_id);
+          if (app.graph[node.id] !== undefined) {
+            node.is_queried = (node.is_queried || app.graph[node.id].is_queried)
+          }
         }
         addNode(node);
         app.graph[node.id] = node;
