@@ -1,13 +1,14 @@
 import {i18n, locale_to_flag, locale_to_lang} from './i18n.js';
 import {getAncestors, getWords} from './api.js';
-
+import {clearDAG, renderDAG, addNode, zoomFitContent, zoomToRootNode} from './dag.js';
 
 var app = new Vue({ 
   i18n ,
   data: {
     flag: locale_to_flag[i18n.locale],
     query: null,
-    graph: {}
+    graph: {},
+    uri_cache: []
   },
   mounted() {
     if (localStorage.locale) {
@@ -55,11 +56,12 @@ function searchWord(){
           'opacity' : '0%',
           'height' : '0%'
         });
-        console.log(graph)
         if (Object.keys(app.graph).length > 0) {
           renderDAG();
         }
-      }
+      },
+      true,
+      app.uri_cache
     );
   }
   return true;

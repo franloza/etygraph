@@ -1,9 +1,10 @@
+import {loadLanguageMap} from './data/load.js';
 
 const DAG_ELEMENT_ID = 'dag-panel'
 const DEFAULT_SCALE = 1;
 const LANGUAGE_MAP = loadLanguageMap();
 
-g = initDAG()
+var g = initDAG()
 var root_node = undefined;
 var initial_render = true;
 
@@ -27,7 +28,7 @@ function initDAG() {
     return g
 }
 
-function clearDAG() {
+export function clearDAG() {
   initial_render = true;
   g = initDAG();
   d3.select(`#${DAG_ELEMENT_ID}`).select('g').remove();
@@ -41,7 +42,7 @@ function getZoom(svg) {
           });
 }
 
-function renderDAG() {
+export function renderDAG() {
 
   // Create the renderer
   var render = new dagreD3.render();
@@ -87,7 +88,7 @@ function renderDAG() {
 }
 
 // Add nodes and edges from API node data
-function addNode(data) {
+export function addNode(data) {
   if (data.is_queried) {
     root_node = data.id
     var node_class = "queried";
@@ -109,7 +110,7 @@ function addNode(data) {
         label_row.attr("class", "word_label");
         tr = d3.select(table).append("tr");
         if (LANGUAGE_MAP[data.lang] != undefined) {
-          language_name = LANGUAGE_MAP[data.lang];
+          var language_name = LANGUAGE_MAP[data.lang];
           var lang_row = tr.append("td").append("div");
           lang_row.attr("class", "word_lang");
           lang_row.text(language_name)
@@ -125,26 +126,7 @@ function addNode(data) {
   });
 }
 
-function loadLanguageMap() {
-  var map = {};
-  var csv = d3.dsvFormat(";");
-  d3.text("./assets/data/language_codes.csv", function(error, rows){
-    if (error) {
-      throw error;
-    }
-    var rows = csv.parse(rows);
-    rows.forEach(function(line) {
-      var language_code = line['code'];
-      var language_name = line['canonical name'];
-      map[language_code] = language_name;
-    });
-
-  });
-
-  return map;
-}
-
-function zoomFitContent(){
+export function zoomFitContent(){
   var svg = d3.select(`#${DAG_ELEMENT_ID}`), svgGroup = svg.select("g");
   var svg_rect = document.getElementById(DAG_ELEMENT_ID).getBoundingClientRect();
   var zoom = getZoom(svgGroup);
@@ -157,7 +139,7 @@ function zoomFitContent(){
   zoom.scaleBy(svg, hRatio < wRatio ? hRatio : wRatio);
 }
 
-function zoomToRootNode(){
+export function zoomToRootNode(){
   var svg = d3.select(`#${DAG_ELEMENT_ID}`), svgGroup = svg.select("g");
   var svg_rect = document.getElementById(DAG_ELEMENT_ID).getBoundingClientRect();
   var zoom = getZoom(svgGroup);

@@ -2,14 +2,19 @@ const BASE_URL = "etytree-virtuoso.wmflabs.org";
 const SPARQL_ENDOINT = "https://" + BASE_URL + '/sparql';
 const MAX_DEPTH = 10;
 
-export function getAncestors(word, lang, on_add_node_callback, on_finish_callback, recursive = true) {
-    var result = {
-    }
-    var prefix = (lang== "eng") ? "" : `${lang}/`;
-    var clean_word = word.trim().replace(' ', '_');
-    var word_uri = `http://${BASE_URL}/dbnary/eng/${prefix}__ee_1_${clean_word}`;
-    var pending = []; 
-    _getAncestors(word_uri, on_add_node_callback, on_finish_callback, recursive, 1, [], result, pending);
+export function getAncestors(word, lang, on_add_node_callback, on_finish_callback, recursive = true, processed = undefined) {
+  if (processed === undefined) {
+    processed = [];
+  }  
+  var result = {}
+  var prefix = (lang== "eng") ? "" : `${lang}/`;
+  var clean_word = word.trim().replace(' ', '_');
+  var word_uri = `http://${BASE_URL}/dbnary/eng/${prefix}__ee_1_${clean_word}`;
+  var pending = []; 
+  if (processed.includes(word_uri)) {
+    on_finish_callback(result);
+  }
+  _getAncestors(word_uri, on_add_node_callback, on_finish_callback, recursive, 1, processed, result, pending);
 }
 
 function getId(uri) {
@@ -46,7 +51,7 @@ export function mergeNode(node_a, node_b) {
 function _getAncestors(uri, on_add_node_callback, on_finish_callback, recursive, depth, processed, result, pending,
     equivalent=undefined
   ) {
-  function describeUriCallback(data) {
+  function describeUriCallback (url, data) {
     pending.pop();
     var parsed = parseResponse(data);
 
@@ -67,7 +72,7 @@ function _getAncestors(uri, on_add_node_callback, on_finish_callback, recursive,
         result[parsed.id] = parsed;
       }
       on_add_node_callback(node);
-      processed.push(parsed.id);
+      processed.push(url);
       if (recursive && depth < MAX_DEPTH) {
         parsed.relative_uris.forEach(element => {
           if (!processed.includes(element)) {
@@ -85,11 +90,12 @@ function _getAncestors(uri, on_add_node_callback, on_finish_callback, recursive,
       on_finish_callback(result)
     }
   }
-
   [uri, getSecondaryUri(uri)].forEach(function (element, i) {
     if (!processed.includes(element) && !pending.includes(element)) {
       pending.push(element);
-      describeUri(element, describeUriCallback);
+      describeUri(element, function (data) {
+        describeUriCallback(element, data)
+      });
     }
   });  
 }
