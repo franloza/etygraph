@@ -57,11 +57,32 @@ function searchWord(){
   return true;
 }
 
+function isMenuToggled() {
+  return JSON.parse($("#wrapper").hasClass("toggled"))
+}
+
 $(document).ready(function () {
+
+  // Toggle menu according to state
+  var current_is_toggled = isMenuToggled();
+  var state_is_toggled = localStorage.menu_toggled;
+  if (state_is_toggled === undefined) {
+    state_is_toggled = false;
+  } 
+  else {
+    state_is_toggled = JSON.parse(state_is_toggled);
+  }
+
+  if ((!state_is_toggled && current_is_toggled) || (state_is_toggled && !current_is_toggled)){
+      $("#wrapper").toggleClass("toggled");
+    } 
+  localStorage.menu_toggled = isMenuToggled();
+
   // Listeners
   $("#menu-toggle").click(function(e) {
       e.preventDefault();
       $("#wrapper").toggleClass("toggled");
+      localStorage.menu_toggled = isMenuToggled();
     });
 
   $("#clear-dag").click(function(e) {
