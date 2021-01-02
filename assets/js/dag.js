@@ -86,29 +86,22 @@ function renderDAG() {
   initial_render = false;
 }
 
-function getShortId(id) {
-  short_id = id.split("/");
-  return short_id[short_id.length - 2] + short_id[short_id.length - 1];
-}
-
-
 // Add nodes and edges from API node data
-function addNode(data, is_root=False) {
-  if (is_root) {
+function addNode(data) {
+  if (data.is_queried) {
     root_node = data.id
-    var node_class = "root";
+    var node_class = "queried";
   }
   else {
-    var node_class = "non-root";
+    var node_class = "non-queried";
   }
-  var short_id = getShortId(data.id);
   g.setNode(data.id, 
     {
       labelType: "html",
       label: function() {
         var table = document.createElement("table"),
         tr = d3.select(table).append("tr");
-        table.setAttribute("id", `node-${short_id}`);
+        table.setAttribute("id", data.id);
         table.setAttribute("width", "auto");
         table.setAttribute("height", "auto");
         var label_row = tr.append("td").append("div");
@@ -125,7 +118,7 @@ function addNode(data, is_root=False) {
       },
       class: node_class
     })
-  data.relatives.forEach(element => {
+  data.relative_ids.forEach(element => {
     g.setEdge(element, data.id, {
       curve: d3.curveBasis
     })

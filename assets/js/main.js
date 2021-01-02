@@ -30,7 +30,7 @@ var app = new Vue({
 
 function searchWord(){
   if (app.query !== undefined) {
-    var root_node = undefined;
+    var query_node_id = undefined;
     var spinner = $("#loading-spinner-outer");
     spinner.removeAttr("style").css({'height': '100%', 'opacity': '100%'});
 
@@ -38,16 +38,21 @@ function searchWord(){
       app.query.toLowerCase(), 
       locale_to_lang[i18n.locale], 
       function(node) {
-        var is_root = root_node === undefined;
-        root_node = node.id;
-        addNode(node, is_root);
+        if (query_node_id === undefined) {
+          query_node_id = node.id;
+        }
+        if (node.is_queried == undefined || !node.is_queried) {
+          node.is_queried = node.id == query_node_id;
+        }
+        addNode(node);
         app.graph[node.id] = node;
       },
-      function(){
+      function(graph){
         spinner.removeAttr("style").css({
           'opacity' : '0%',
           'height' : '0%'
         });
+        console.log(graph)
         if (Object.keys(app.graph).length > 0) {
           renderDAG();
         }
