@@ -4,11 +4,11 @@ const DAG_ELEMENT_ID = 'dag-panel'
 const DEFAULT_SCALE = 1;
 const LANGUAGE_MAP = loadLanguageMap();
 
-var g = initDAG()
+var g = resetDAG()
 var root_node = undefined;
 var initial_render = true;
 
-function initDAG() {
+function resetDAG() {
     g = new dagreD3.graphlib.Graph({directed:true, compound:true, multigraph:false})
     .setGraph({})
     .setDefaultEdgeLabel(function() { return {}; })
@@ -29,8 +29,7 @@ function initDAG() {
 }
 
 export function clearDAG() {
-  initial_render = true;
-  g = initDAG();
+  g = resetDAG();
   d3.select(`#${DAG_ELEMENT_ID}`).select('g').remove();
 }
 
@@ -52,7 +51,7 @@ export function renderDAG() {
   var svg = d3.select(`#${DAG_ELEMENT_ID}`)
               .attr("preserveAspectRatio", "xMinYMin meet")
               .attr("viewBox", "0 0 " + svg_rect.width + " " + svg_rect.height);
-  if (initial_render){
+  if (svg.select("g").empty()){
     var svgGroup = svg.append('g');
   } else {
     var svgGroup = svg.select('g');
@@ -83,8 +82,6 @@ export function renderDAG() {
       }).attr("width", function(d,i){
         return (labels_width[i] || 0) + 20;
       });
-
-  initial_render = false;
 }
 
 // Add nodes and edges from API node data

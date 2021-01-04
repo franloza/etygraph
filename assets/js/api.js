@@ -12,7 +12,7 @@ export function getAncestors(word, lang, on_add_node_callback, on_finish_callbac
   var word_uri = `http://${BASE_URL}/dbnary/eng/${prefix}__ee_1_${clean_word}`;
   var pending = []; 
   if (processed.includes(word_uri)) {
-    on_finish_callback(result);
+    on_finish_callback(result, getId(word_uri));
   }
   _getAncestors(word_uri, on_add_node_callback, on_finish_callback, recursive, 1, processed, result, pending);
 }
@@ -48,21 +48,13 @@ export function mergeNode(node_a, node_b) {
 }
 
 
-function _getAncestors(uri, on_add_node_callback, on_finish_callback, recursive, depth, processed, result, pending,
-    equivalent=undefined
-  ) {
+function _getAncestors(uri, on_add_node_callback, on_finish_callback, recursive, depth, processed, result, pending) {
   function describeUriCallback (url, data) {
     pending.pop();
     var parsed = parseResponse(data);
 
     if (parsed !== undefined) {
-      if (equivalent !== undefined && result[equivalent.id] !== undefined) {
-        // Merge equivalent nodes
-        var node = result[equivalent.id];
-        result[equivalent.id] = mergeNode(node, parsed)
-        delete result[parsed.id];
-      }
-      else if (result[parsed.id] !== undefined) {
+      if (result[parsed.id] !== undefined) {
         // Two nodes with same ID and different URIs
         var node = parsed;
         result[parsed.id] = mergeNode(node, result[parsed.id]);
@@ -81,13 +73,13 @@ function _getAncestors(uri, on_add_node_callback, on_finish_callback, recursive,
         });
         parsed.equivalent_uris.forEach(element => {
           if (!processed.includes(element)) {
-            _getAncestors(element, on_add_node_callback, on_finish_callback, recursive, depth, processed, result, pending, parsed)
+            _getAncestors(element, on_add_node_callback, on_finish_callback, recursive, depth, processed, result, pending)
           }
         });        
       }
     }
     if (pending.length == 0) {
-      on_finish_callback(result)
+      on_finish_callback(result, getId(url))
     }
   }
   [uri, getSecondaryUri(uri)].forEach(function (element, i) {
@@ -98,6 +90,76 @@ function _getAncestors(uri, on_add_node_callback, on_finish_callback, recursive,
       });
     }
   });  
+}
+
+export function mergeEquivalentNodes(graph) {
+  var sets = [];
+  for (const [id, node] of Object.entries(graph)) {
+    var set = new Set(node.equivalent_ids);
+    set.add(id);
+    sets.push(set);
+  }
+
+  // Merge sets based on intersections
+  var merged = true;
+  while(merged) {
+    merged = false;
+    var results = [];
+    while (sets.length > 0) {
+      var common = sets[0];
+      var rest = sets.slice(1);
+      sets = [];
+      for (const element of rest) {
+        var is_disjoint = (new Set([...element].filter(x => common.has(x)))).size == 0;
+        if (is_disjoint) {
+          sets.push(element);
+        } else {
+          merged = true;
+          common =  new Set([...common, ...element]);
+        }
+      }
+      results.push(common);
+    }
+    sets = results;
+  }
+
+  // Create new graph
+  var merged_graph = {};
+  var aliases = {};
+  for (const equivalent_ids of sets) {
+    var merge_id = undefined;
+    for (const equivalent_id of equivalent_ids) {
+      if (graph[equivalent_id] !== undefined) {
+        var equivalent_node = graph[equivalent_id];
+        if (merge_id === undefined) {
+          merge_id = equivalent_id;
+          merged_graph[equivalent_id] = equivalent_node;
+        } else {
+          var merge_node = merged_graph[merge_id];
+          merged_graph[merge_id] = mergeNode(merge_node, equivalent_node)
+        } 
+        aliases[equivalent_id] = merge_id;
+      }
+    }
+  }
+
+  // Replace references to merged nodes in relatives and remove self loops and dangling references
+  for (const [id, node] of Object.entries(merged_graph)) {
+    var relative_ids = [];
+    for (const relative_id of node.relative_ids) {
+      if (node.id != relative_id) {
+        if (aliases[relative_id] === undefined) {
+          if (merged_graph[relative_id] !== undefined) {
+            relative_ids.push(relative_id);
+          }
+        } else {
+          relative_ids.push(aliases[relative_id])
+        }
+      }
+    }
+    merged_graph[id].relative_ids = relative_ids;
+  }
+  return merged_graph;
 }
 
 

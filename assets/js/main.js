@@ -1,5 +1,5 @@
 import {i18n, locale_to_flag, locale_to_lang} from './i18n.js';
-import {getAncestors, getWords} from './api.js';
+import {getAncestors, getWords, mergeEquivalentNodes, mergeNode} from './api.js';
 import {clearDAG, renderDAG, addNode, zoomFitContent, zoomToRootNode} from './dag.js';
 
 var app = new Vue({ 
@@ -8,7 +8,8 @@ var app = new Vue({
     flag: locale_to_flag[i18n.locale],
     query: null,
     graph: {},
-    uri_cache: []
+    uri_cache: [],
+    query_node_ids: new Set()
   },
   mounted() {
     if (localStorage.locale) {
@@ -40,25 +41,30 @@ function searchWord(){
       locale_to_lang[i18n.locale], 
       function(node) {
         if (query_node_id === undefined) {
+          app.query_node_ids.add(node.id);
           query_node_id = node.id;
         }
-        if (node.is_queried == undefined || !node.is_queried) {
-          node.is_queried = (node.id == query_node_id);
-          if (app.graph[node.id] !== undefined) {
-            node.is_queried = (node.is_queried || app.graph[node.id].is_queried)
-          }
-        }
-        addNode(node);
         app.graph[node.id] = node;
       },
-      function(graph){
+      function(graph, last_node_id){
         spinner.removeAttr("style").css({
           'opacity' : '0%',
           'height' : '0%'
         });
-        if (Object.keys(app.graph).length > 0) {
+        if ((Object.keys(graph).length == 0) && app.graph[last_node_id] !== undefined) {
+          // The query was already in the graph
+          app.query_node_ids.add(last_node_id);
+        }
+        var merged_graph = mergeEquivalentNodes(app.graph);
+        if (Object.keys(merged_graph).length > 0) {
+          clearDAG();
+          Object.values(merged_graph).forEach(node => {
+            node.is_queried = (app.query_node_ids.has(node.id));
+            addNode(node);
+          });
           renderDAG();
         }
+        app.graph = merged_graph;
       },
       true,
       app.uri_cache
@@ -97,6 +103,8 @@ $(document).ready(function () {
 
   $("#clear-dag").click(function(e) {
     app.graph = {};
+    app.uri_cache = [];
+    app.query_node_ids = new Set();
     clearDAG();
     $('#query-input').val('');
   });
