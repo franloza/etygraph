@@ -18,7 +18,9 @@ export function getAncestors(word, lang, on_add_node_callback, on_finish_callbac
 }
 
 function getId(uri) {
-  var uri = uri.replace('__ee_1_', '__ee_')
+  const regex = /__ee_\d+_/gm;
+  const subst = `__ee_`;
+  var uri = uri.replace(regex, subst);
   var id = uri.split("/");
   return id[id.length - 2] + "_" + id[id.length - 1];
 }
@@ -147,15 +149,17 @@ export function mergeEquivalentNodes(graph) {
   for (const [id, node] of Object.entries(merged_graph)) {
     var relative_ids = [];
     for (const relative_id of node.relative_ids) {
-      if (node.id != relative_id) {
-        if (aliases[relative_id] === undefined) {
-          if (merged_graph[relative_id] !== undefined) {
+      if (aliases[relative_id] === undefined) {
+        if (merged_graph[relative_id] !== undefined) {
+          if (node.id != relative_id) {
             relative_ids.push(relative_id);
           }
-        } else {
+        }
+      } else {
+        if (node.id != aliases[relative_id]) {
           relative_ids.push(aliases[relative_id])
         }
-      }
+      }   
     }
     merged_graph[id].relative_ids = relative_ids;
   }
