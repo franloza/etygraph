@@ -140,9 +140,13 @@ export function mergeEquivalentNodes(graph) {
           var merge_node = merged_graph[merge_id];
           merged_graph[merge_id] = mergeNode(merge_node, equivalent_node)
         } 
-        aliases[equivalent_id] = merge_id;
       }
     }
+    if (merge_id !== undefined) {
+      for (const equivalent_id of equivalent_ids) {
+        aliases[equivalent_id] = merge_id;
+      }
+    } 
   }
 
   // Replace references to merged nodes in relatives and remove self loops and dangling references
