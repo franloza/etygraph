@@ -2,6 +2,7 @@ import {i18n, locale_to_flag, locale_to_lang} from './i18n.js';
 import {getAncestors, getWords, mergeEquivalentNodes, mergeNode} from './api.js';
 import {clearDAG, renderDAG, addNode, zoomFitContent, zoomToRootNode} from './dag.js';
 
+
 var app = new Vue({ 
   i18n ,
   data: {
@@ -9,12 +10,21 @@ var app = new Vue({
     query: null,
     graph: {},
     uri_cache: [],
-    query_node_ids: new Set()
+    query_node_ids: new Set(),
+    menu_toggled: false
   },
   mounted() {
     if (localStorage.locale) {
       i18n.locale = localStorage.locale;
       this.flag = locale_to_flag[localStorage.locale];
+    }
+    if (localStorage.menu_toggled) {
+      this.menu_toggled = JSON.parse(localStorage.menu_toggled);
+    }
+  },
+  watch: {
+    menu_toggled(value) {
+        localStorage.menu_toggled = value;
     }
   },
   methods: {
@@ -25,7 +35,10 @@ var app = new Vue({
         localStorage.locale = locale;
       }   
     },
-    searchWord: searchWord
+    searchWord: searchWord,
+    toggleMenu: function () {
+      this.menu_toggled = !this.menu_toggled
+    }
   }
 }).$mount('#app')
 
@@ -73,33 +86,7 @@ function searchWord(){
   return true;
 }
 
-function isMenuToggled() {
-  return JSON.parse($("#wrapper").hasClass("toggled"))
-}
-
 $(document).ready(function () {
-
-  // Toggle menu according to state
-  var current_is_toggled = isMenuToggled();
-  var state_is_toggled = localStorage.menu_toggled;
-  if (state_is_toggled === undefined) {
-    state_is_toggled = false;
-  } 
-  else {
-    state_is_toggled = JSON.parse(state_is_toggled);
-  }
-
-  if ((!state_is_toggled && current_is_toggled) || (state_is_toggled && !current_is_toggled)){
-      $("#wrapper").toggleClass("toggled");
-    } 
-  localStorage.menu_toggled = isMenuToggled();
-
-  // Listeners
-  $("#menu-toggle").click(function(e) {
-      e.preventDefault();
-      $("#wrapper").toggleClass("toggled");
-      localStorage.menu_toggled = isMenuToggled();
-    });
 
   $("#clear-dag").click(function(e) {
     app.graph = {};

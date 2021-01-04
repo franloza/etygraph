@@ -28,8 +28,9 @@
 }
 
 
-#config-menu {
+.config-menu-item {
   width: 15rem;
+  padding: .5rem 1rem;;
 }
 
 #page-content-wrapper {
