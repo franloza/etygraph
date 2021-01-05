@@ -6,7 +6,7 @@ var app = new Vue({
   i18n ,
   data: {
     flag: locale_to_flag[i18n.locale],
-    query: null,
+    query: '',
     graph: {
       raw: {},
       merged: {}
@@ -61,10 +61,17 @@ var app = new Vue({
     toggleMenu: function () {
       this.menu_toggled = !this.menu_toggled
     },
-
+    zoomToRootNode,
+    zoomFitContent,
+    clear:  function () {
+      this.graph = {};
+      this.uri_cache = [];
+      this.query_node_ids = new Set();
+      this.query = '';
+      clearDAG();
+    }
   }
 }).$mount('#app')
-
 
 function searchWord(){
   app.loading = true;
@@ -124,49 +131,28 @@ function redrawDAG() {
 
 $(document).ready(function () {
 
-  $("#clear-dag").click(function(e) {
-    app.graph = {};
-    app.uri_cache = [];
-    app.query_node_ids = new Set();
-    clearDAG();
-    $('#query-input').val('');
+  $('.advancedAutoComplete').autoComplete({
+    resolver: 'custom',
+    autoFocus: true,
+    minLength: 4,
+    noResultsText: i18n.t('message.no_results'),
+    events: {
+        search: function (qry, callback) {
+            if (qry.trim().split(' ')[0].length >= 4) {
+              getWords(qry.toLowerCase(), locale_to_lang[i18n.locale], function(data) {
+                callback(data.map(x => {return x.word}));
+              });
+          }
+        },
+    }
+  }).on( "autocomplete.select", function (evt, item)  {
+      app.query = item;
+      searchWord(evt)
   });
-
-  $('#query-input').focus(
-    function(){
-        $(this).val('');
-    });
-
-  $('#zoom-to-root').click(function(e) {
-    e.preventDefault();
-    zoomToRootNode();
-  });
-
-  $('#zoom-fit-content').click(function(e) {
-    e.preventDefault();
-    zoomFitContent();
-  });
-
+  
 });
 
-$('.advancedAutoComplete').autoComplete({
-  resolver: 'custom',
-  autoFocus: true,
-  minLength: 4,
-  noResultsText: i18n.t('message.no_results'),
-  events: {
-      search: function (qry, callback) {
-          if (qry.trim().split(' ')[0].length >= 4) {
-            getWords(qry.toLowerCase(), locale_to_lang[i18n.locale], function(data) {
-              callback(data.map(x => {return x.word}));
-            });
-        }
-      },
-  }
-}).on( "autocomplete.select", function (evt, item)  {
-    app.query = item;
-    searchWord(evt)
-});
+
 
 
 
