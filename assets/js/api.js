@@ -18,7 +18,7 @@ export function getAncestors(word, lang, on_add_node_callback, on_finish_callbac
 }
 
 function getId(uri) {
-  const regex = /__ee_\d+_/gm;
+  const regex = /__ee_\d+_/gm; 
   const subst = `__ee_`;
   var uri = uri.replace(regex, subst);
   var id = uri.split("/");

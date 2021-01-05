@@ -8,7 +8,7 @@
 	<!-- Bootstrap CSS-->
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
 		integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.1.0/css/flag-icon.min.css" rel="stylesheet">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet">
 
 	<!-- Font Awesome JS -->
 	<script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js"
@@ -48,28 +48,31 @@
 						<img src="assets/img/logo.svg"></img>
 					</div>
 					<span id="sidebar-heading-title">Etygraph </span>
-					<span class="flag-icon" :class="['flag-icon-' + flag]"></span>
+					<span class="flag-icon" :class="['flag-icon-' + locale_data[locale].flag]"></span>
 					<span id="sidebar-heading-subtitle"> 0.1.0 </span>
 				</div>
 				<div id="language-config" class="config-menu-item">
-					<li class="dropdown">
-						<span class="dropdown-toggle" id="language-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> {{ $t("message.language") }} </a>
-						<div class="dropdown-menu">
-							<a class="dropdown-item" @click="changeLocale('en')"><span class="flag-icon flag-icon-gb"></span>{{ $t("message.english") }} </a>
-							<a class="dropdown-item" @click="changeLocale('es')"><span class="flag-icon flag-icon-es"></span>{{ $t("message.spanish") }} </a>
-						</div>
-					</li>
+					<span class="dropdown-toggle" id="language-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ $t("message['" + locale_data[locale].name + "']") }}</a>
+					<div class="dropdown-menu">
+						<div v-for="(value, key) in locale_data">
+							<a class="dropdown-item" @click="changeLocale(key)">
+								<span v-bind:class="'flag-icon-' + value.flag" class="flag-icon">
+								</span>{{ $t("message['" + value.name + "']") }}
+							</a>
+						</div>					
+					</div>
+					
 				</div>
 				<div class="config-menu-item">
 					<div id="merge-equivalent-config" class="custom-control custom-switch custom-control-right">
 						<input id="merge-equivalent-checkbox" class="custom-control-input" type="checkbox" v-model="settings.merge_equivalent_nodes">
-						<label for="merge-equivalent-checkbox" class="custom-control-label">Merge Equivalent Nodes </label>
+						<label for="merge-equivalent-checkbox" class="custom-control-label">{{ $t("message.merge_equivalent_nodes") }}</label>
 					</div>
 				</div>	
 				<div class="config-menu-item">
 					<div id="show-clusters-config" class="custom-control custom-switch custom-control-right">
 						<input id="show-clusters-checkbox" class="custom-control-input" type="checkbox" v-model="settings.show_clusters">
-						<label for="show-clusters-checkbox" class="custom-control-label">Show clusters </label>
+						<label for="show-clusters-checkbox" class="custom-control-label">{{ $t("message.group_by_language") }}</a></label>
 					</div>
 				</div>
 			</div>
@@ -100,7 +103,7 @@
 				</nav>
 				<div v-if="loading" id="loading-spinner">
 					<div id="loading-spinner-outer" class="d-flex justify-content-md-center">
-						<div id="loading-spinner-inner" style="" class="spinner-border text-secondary" role="status">
+						<div id="loading-spinner-inner" class="spinner-border text-secondary" role="status">
 							<span class="sr-only">Loading...</span>
 						</div>
 					</div>

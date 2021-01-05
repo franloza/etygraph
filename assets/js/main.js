@@ -1,11 +1,11 @@
-import {i18n, locale_to_flag, locale_to_lang} from './i18n.js';
+import {i18n, locale_data} from './i18n.js';
 import {getAncestors, getWords, mergeEquivalentNodes} from './api.js';
 import {clearDAG, renderDAG, addNode, zoomFitContent, zoomToRootNode, DAGisRendered} from './dag.js';
 
 var app = new Vue({ 
   i18n ,
   data: {
-    flag: locale_to_flag[i18n.locale],
+    // Default variables
     query: '',
     graph: {
       raw: {},
@@ -18,13 +18,15 @@ var app = new Vue({
       'merge_equivalent_nodes': true,
       'show_clusters': true
     },
-    loading: false
+    loading: false,
+    locale_data: locale_data,
+    locale: 'en'
   },
   mounted() {
     if (localStorage.locale) {
-      i18n.locale = localStorage.locale;
-      this.flag = locale_to_flag[localStorage.locale];
+      this.locale = localStorage.locale;
     }
+    i18n.locale = this.locale;
     if (localStorage.menu_toggled) {
       this.menu_toggled = JSON.parse(localStorage.menu_toggled);
     }
@@ -52,12 +54,12 @@ var app = new Vue({
   methods: {
     changeLocale: function (locale) {
       if (i18n.messages[locale] !== undefined) {
+        this.locale = locale;
         i18n.locale = locale;
-        this.flag = locale_to_flag[locale];
         localStorage.locale = locale;
       }   
     },
-    searchWord: searchWord,
+    searchWord,
     toggleMenu: function () {
       this.menu_toggled = !this.menu_toggled
     },
@@ -81,11 +83,14 @@ function searchWord(){
     try {
       getAncestors(
         app.query.toLowerCase(), 
-        locale_to_lang[i18n.locale], 
+        app.locale_data[app.locale].lang, 
         function(node) {
           if (query_node_id === undefined) {
             app.query_node_ids.add(node.id);
             query_node_id = node.id;
+          }
+          if (app.graph.raw === undefined) {
+            app.graph.raw = {};
           }
           app.graph.raw[node.id] = node;
         },
@@ -139,7 +144,7 @@ $(document).ready(function () {
     events: {
         search: function (qry, callback) {
             if (qry.trim().split(' ')[0].length >= 4) {
-              getWords(qry.toLowerCase(), locale_to_lang[i18n.locale], function(data) {
+              getWords(qry.toLowerCase(), app.locale_data[app.locale].lang, function(data) {
                 callback(data.map(x => {return x.word}));
               });
           }
