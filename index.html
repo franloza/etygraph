@@ -11,9 +11,7 @@
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet">
 
 	<!-- Font Awesome JS -->
-	<script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js"
-		integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ"
-		crossorigin="anonymous"></script>
+	<script defer src="https://use.fontawesome.com/releases/v5.0.13/js/all.js"></script>
 	<script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js"
 		integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY"
 		crossorigin="anonymous"></script>
@@ -73,6 +71,16 @@
 					<div id="show-clusters-config" class="custom-control custom-switch custom-control-right">
 						<input id="show-clusters-checkbox" class="custom-control-input" type="checkbox" v-model="settings.show_clusters">
 						<label for="show-clusters-checkbox" class="custom-control-label">{{ $t("message.group_by_language") }}</a></label>
+					</div>
+				</div>
+				<div class="sidebar-footer">
+					<div class="sidebar-footer-item">
+						<a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">
+							<img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/3.0/88x31.png" />
+						</a>
+					</div>
+					<div class="sidebar-footer-item">
+						<a href="https://github.com/franloza/etygraph"> <i class="fa fa-lg fab fa-github"></i></a>	
 					</div>
 				</div>
 			</div>
