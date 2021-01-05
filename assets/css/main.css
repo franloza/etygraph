@@ -121,9 +121,10 @@
   margin-right: 0.5em;
 }
 
-#loading-spinner-outer {
-  height: 0%;
-  opacity: 0%;
+#loading-spinner-inner {
+  width: 5rem; 
+  height: 5rem;
+  margin-top: 10rem;
 }
 
 [v-cloak] {display: none}

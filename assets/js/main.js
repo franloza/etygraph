@@ -18,6 +18,7 @@ var app = new Vue({
       'merge_equivalent_nodes': true,
       'show_clusters': true
     },
+    loading: false
   },
   mounted() {
     if (localStorage.locale) {
@@ -66,39 +67,41 @@ var app = new Vue({
 
 
 function searchWord(){
+  app.loading = true;
+  var successful = true;
   if (app.query !== undefined) {
     var query_node_id = undefined;
-    var spinner = $("#loading-spinner-outer");
-    spinner.removeAttr("style").css({'height': '100%', 'opacity': '100%'});
-
-    getAncestors(
-      app.query.toLowerCase(), 
-      locale_to_lang[i18n.locale], 
-      function(node) {
-        if (query_node_id === undefined) {
-          app.query_node_ids.add(node.id);
-          query_node_id = node.id;
-        }
-        app.graph.raw[node.id] = node;
-      },
-      function(graph, last_node_id){
-        spinner.removeAttr("style").css({
-          'opacity' : '0%',
-          'height' : '0%'
-        });
-        if ((Object.keys(graph).length == 0) && app.graph.raw[last_node_id] !== undefined) {
-          // The query was already in the graph
-          app.query_node_ids.add(last_node_id);
-        }
-        var raw_graph =  jQuery.extend(true, { }, app.graph.raw);
-        app.graph.merged = mergeEquivalentNodes(raw_graph);
-        drawDAG();
-      },
-      true,
-      app.uri_cache
-    );
+    try {
+      getAncestors(
+        app.query.toLowerCase(), 
+        locale_to_lang[i18n.locale], 
+        function(node) {
+          if (query_node_id === undefined) {
+            app.query_node_ids.add(node.id);
+            query_node_id = node.id;
+          }
+          app.graph.raw[node.id] = node;
+        },
+        function(graph, last_node_id){
+          if ((Object.keys(graph).length == 0) && app.graph.raw[last_node_id] !== undefined) {
+            // The query was already in the graph
+            app.query_node_ids.add(last_node_id);
+          }
+          var raw_graph =  jQuery.extend(true, { }, app.graph.raw);
+          app.graph.merged = mergeEquivalentNodes(raw_graph);
+          app.loading = false;
+          Vue.nextTick(drawDAG);
+        },
+        true,
+        app.uri_cache
+      );
+    } catch (error) {
+      console.error(error);
+      successful = false;
+    }
   }
-  return true;
+  //app.loading = false;
+  return successful;
 }
 
 function drawDAG() {

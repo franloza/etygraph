@@ -53,7 +53,6 @@ export function renderDAG() {
   var svg_rect = document.getElementById(DAG_ELEMENT_ID).getBoundingClientRect();
   var svg = d3.select(`#${DAG_ELEMENT_ID}`).attr("preserveAspectRatio", "xMinYMin meet")
 
-  console.log(svg_rect.width, svg_rect.height);
   if (DAGisRendered()){
     var svgGroup = svg.select('g');
   } else {
