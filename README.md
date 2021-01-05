@@ -6,6 +6,10 @@ Discover the origin of the words. Try it in [https://etygraph.netlify.app](https
 ## Languages
 - English
 - Spanish
+- French
+- Italian
+- Portuguese
+- Catalan
 
 ## Screenshots
 ![Screenshot 1](./assets/img/screenshot_1.png)

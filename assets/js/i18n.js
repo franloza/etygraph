@@ -122,7 +122,7 @@ export const locale_data = {
         name: 'portuguese'
     },
     ca: {
-        flag: 'es-ct',
+        flag: 'es-ca',
         lang: 'cat',
         name: 'catalan'
     }
