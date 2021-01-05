@@ -9,6 +9,7 @@ const messages = {
             italian: 'Italian',
             portuguese: 'Portuguese',
             catalan: 'Catalan',
+            galician: 'Galician',
             no_results: 'No results',
             group_by_language: 'Group by language',
             merge_equivalent_nodes: 'Merge equivalent nodes'
@@ -24,6 +25,7 @@ const messages = {
             italian: "Italiano",
             portuguese: "Portugués",
             catalan: 'Catalán',
+            galician: 'Gallego',
             no_results: 'Sin resultados',
             group_by_language: 'Agrupar por idioma',
             merge_equivalent_nodes: 'Unir nodos equivalentes'
@@ -38,6 +40,7 @@ const messages = {
             french: 'Français',
             italian: 'Italien',
             portuguese: 'Portugais',
+            galician: 'Galicien',
             no_results: 'Aucun résultat',
             group_by_language: 'Grouper par langue',
             merge_equivalent_nodes: 'Rejoindre des nœuds équivalents',            
@@ -53,6 +56,7 @@ const messages = {
             italian: 'Italiano',
             catalan: 'Catalano',
             portuguese: 'Portoghese',
+            galician: 'Galiziano',
             no_results: 'Nessun risultato',
             group_by_language: 'Raggruppa per lingua',
             merge_equivalent_nodes: 'Unisci nodi equivalenti'           
@@ -68,6 +72,7 @@ const messages = {
             italian: 'Italiano',
             portuguese: 'Português',
             catalan: 'Catalão',
+            galician: 'Galego',
             no_results: 'Sem resultados',
             group_by_language: 'Grupo por idioma',
             merge_equivalent_nodes: 'Junte nós equivalentes' 
@@ -83,9 +88,26 @@ const messages = {
             italian: "Italià",
             portuguese: "Portuguès",
             catalan: 'Català',
+            galician: 'Gallec',
             no_results: 'Sense resultats',
             group_by_language: 'Agrupar per idioma',
             merge_equivalent_nodes: 'Unir nodes equivalents' 
+        }
+    },
+    ga: {
+        message: {
+            search: 'Buscar',
+            language: 'Lingua',
+            english: 'Inglés',
+            spanish: 'Español',
+            french: "Francés",
+            italian: "Italiano",
+            portuguese: "Portugués",
+            catalan: 'Catalán',
+            galician: 'Galego',
+            no_results: 'Sen resultados',
+            group_by_language: 'Grupo por idioma',
+            merge_equivalent_nodes: 'Unir nodos equivalentes'
         }
     }
 }
@@ -125,5 +147,10 @@ export const locale_data = {
         flag: 'es-ca',
         lang: 'cat',
         name: 'catalan'
+    },
+    ga: {
+        flag: 'es-ga',
+        lang: 'glg',
+        name: 'galician'
     }
 }
