@@ -8,6 +8,7 @@ const messages = {
             french: 'French',
             italian: 'Italian',
             portuguese: 'Portuguese',
+            catalan: 'Catalan',
             no_results: 'No results',
             group_by_language: 'Group by language',
             merge_equivalent_nodes: 'Merge equivalent nodes'
@@ -22,6 +23,7 @@ const messages = {
             french: "Francés",
             italian: "Italiano",
             portuguese: "Portugués",
+            catalan: 'Catalán',
             no_results: 'Sin resultados',
             group_by_language: 'Agrupar por idioma',
             merge_equivalent_nodes: 'Unir nodos equivalentes'
@@ -37,6 +39,8 @@ const messages = {
             italian: 'Italien',
             portuguese: 'Portugais',
             no_results: 'Aucun résultat',
+            group_by_language: 'Grouper par langue',
+            merge_equivalent_nodes: 'Rejoindre des nœuds équivalents',            
         }
     },
     it: {
@@ -47,8 +51,11 @@ const messages = {
             spanish: 'Spagnolo',
             french: 'Francese',
             italian: 'Italiano',
+            catalan: 'Catalano',
             portuguese: 'Portoghese',
             no_results: 'Nessun risultato',
+            group_by_language: 'Raggruppa per lingua',
+            merge_equivalent_nodes: 'Unisci nodi equivalenti'           
         }
     },
     pt: {
@@ -60,7 +67,25 @@ const messages = {
             french: 'Francês',
             italian: 'Italiano',
             portuguese: 'Português',
+            catalan: 'Catalão',
             no_results: 'Sem resultados',
+            group_by_language: 'Grupo por idioma',
+            merge_equivalent_nodes: 'Junte nós equivalentes' 
+        }
+    },
+    ca: {
+        message: {
+            search: 'Cercar',
+            language: 'Idioma',
+            english: 'Anglés',
+            spanish: 'Espanyol',
+            french: "Francès",
+            italian: "Italià",
+            portuguese: "Portuguès",
+            catalan: 'Català',
+            no_results: 'Sense resultats',
+            group_by_language: 'Agrupar per idioma',
+            merge_equivalent_nodes: 'Unir nodes equivalents' 
         }
     }
 }
@@ -95,5 +120,10 @@ export const locale_data = {
         flag: 'pt',
         lang: 'por',
         name: 'portuguese'
+    },
+    ca: {
+        flag: 'es-ct',
+        lang: 'cat',
+        name: 'catalan'
     }
 }
