@@ -11,7 +11,7 @@
     stroke-width: 1.5px;
     }
 
-.dag .root rect{
+.dag .queried rect{
     fill: indianred;
     fill-opacity: 0.3;
     stroke-width: 2px;

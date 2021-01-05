@@ -38,28 +38,34 @@
 </head>
 
 <body>
-	<div id="app">
-		<div class="d-flex toggled" id="wrapper">
+	<div id="app" v-cloak>
+		<div class="d-flex" :class="menu_toggled ? 'toggled' : null" id="wrapper">
 
 			<!-- Sidebar -->
 			<div class="bg-light border-right" id="sidebar-wrapper">
-			<div class="sidebar-heading">
-				<div id="sidebar-heading-icon">
-					<img src="assets/img/logo.svg"></img>
-				</div>
-				<span id="sidebar-heading-title">Etygraph </span>
-				<span class="flag-icon"  :class="['flag-icon-' + flag]"></span>
-				<span id="sidebar-heading-subtitle"> 0.1.0 </span>
-			</div>
-			<div id="config-menu">
-				<li class="nav-item dropdown">
-					<span class="nav-link dropdown-toggle" id="language-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> {{ $t("message.language") }} </a>
-					<div class="dropdown-menu">
-						<a class="dropdown-item" @click="changeLocale('en')"><span class="flag-icon flag-icon-gb"></span>{{ $t("message.english") }} </a>
-						<a class="dropdown-item" @click="changeLocale('es')"><span class="flag-icon flag-icon-es"></span>{{ $t("message.spanish") }} </a>
+				<div class="sidebar-heading">
+					<div id="sidebar-heading-icon">
+						<img src="assets/img/logo.svg"></img>
 					</div>
-				</li>
-			</div>
+					<span id="sidebar-heading-title">Etygraph </span>
+					<span class="flag-icon" :class="['flag-icon-' + flag]"></span>
+					<span id="sidebar-heading-subtitle"> 0.1.0 </span>
+				</div>
+				<div id="language-config" class="config-menu-item">
+					<li class="dropdown">
+						<span class="dropdown-toggle" id="language-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> {{ $t("message.language") }} </a>
+						<div class="dropdown-menu">
+							<a class="dropdown-item" @click="changeLocale('en')"><span class="flag-icon flag-icon-gb"></span>{{ $t("message.english") }} </a>
+							<a class="dropdown-item" @click="changeLocale('es')"><span class="flag-icon flag-icon-es"></span>{{ $t("message.spanish") }} </a>
+						</div>
+					</li>
+				</div>
+				<div class="config-menu-item">
+					<div id="merge-equivalent-config" class="custom-control custom-switch custom-control-right">
+						<input id="merge-equivalent-checkbox" class="custom-control-input" type="checkbox" v-model="settings.merge_equivalent_nodes">
+						<label for="merge-equivalent-checkbox" class="custom-control-label">Merge Equivalent Nodes </label>
+					</div>
+				</div>	
 			</div>
 			<!-- /#sidebar-wrapper -->
 		
@@ -67,7 +73,7 @@
 			<div id="page-content-wrapper">
 		
 				<nav class="navbar navbar-light bg-light border-bottom">
-					<button class="nav-button" type="button" id="menu-toggle">
+					<button class="nav-button" type="button" id="menu-toggle" v-on:click="toggleMenu">
 						<div class="icon"><span class="nav-button-fa fas fa-cog"></span></div>
 					</button>
 					<button class="nav-button" type="button" id="clear-dag">
@@ -108,10 +114,8 @@
 		integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
 		crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/gh/xcash/bootstrap-autocomplete@v2.3.7/dist/latest/bootstrap-autocomplete.min.js"></script>
-		
 	<!-- JS assets -->
 	<script type="module" src="assets/js/main.js"></script>
-	<script src="assets/js/dag.js"></script>
 
 </body>
 
