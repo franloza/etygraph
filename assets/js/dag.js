@@ -51,9 +51,8 @@ export function renderDAG() {
 
   // Set up an SVG group so that we can translate the final graph.
   var svg_rect = document.getElementById(DAG_ELEMENT_ID).getBoundingClientRect();
-  var svg = d3.select(`#${DAG_ELEMENT_ID}`)
-              .attr("preserveAspectRatio", "xMinYMin meet")
-              .attr("viewBox", "0 0 " + svg_rect.width + " " + svg_rect.height);
+  var svg = d3.select(`#${DAG_ELEMENT_ID}`).attr("preserveAspectRatio", "xMinYMin meet")
+
   if (DAGisRendered()){
     var svgGroup = svg.select('g');
   } else {
@@ -134,7 +133,6 @@ export function zoomFitContent(){
   var svg = d3.select(`#${DAG_ELEMENT_ID}`), svgGroup = svg.select("g");
   var svg_rect = document.getElementById(DAG_ELEMENT_ID).getBoundingClientRect();
   var zoom = getZoom(svgGroup);
-  var padding = 20;
   var hRatio = DEFAULT_SCALE/2 * (svg_rect.height / g.graph().height);
   var wRatio = DEFAULT_SCALE/2 * (svg_rect.width / g.graph().width);
   svg.call(zoom);

@@ -82,13 +82,13 @@
 					<button class="nav-button" type="button" id="menu-toggle" v-on:click="toggleMenu">
 						<div class="icon"><span class="nav-button-fa fas fa-cog"></span></div>
 					</button>
-					<button class="nav-button" type="button" id="clear-dag">
+					<button class="nav-button" type="button" id="clear-dag" v-on:click="clear">
 						<div class="icon"><span class="nav-button-fa fas fa-eraser"></span></div>
 					</button>	
-					<button class="nav-button" type="button" id="zoom-to-root">
+					<button class="nav-button" type="button" id="zoom-to-root" v-on:click="zoomToRootNode">
 						<div class="icon"><span class="nav-button-fa fa fa-compress"></span></div>
 					</button>
-					<button class="nav-button" type="button" id="zoom-fit-content">
+					<button class="nav-button" type="button" id="zoom-fit-content" v-on:click="zoomFitContent">
 						<div class="icon"><span class="nav-button-fa fas fa-expand-arrows-alt"></span></div>
 					</button>
 					<nav class="navbar mr-auto bg-light" id="search-bar-nav">
@@ -98,12 +98,14 @@
 						</button>
 					</nav>			
 				</nav>
-				<div id="loading-spinner-outer" class="d-flex justify-content-md-center align-items-center">
-					<div id="loading-spinner-inner" style="width: 5rem; height: 5rem;" class="spinner-border text-secondary" role="status">
-						<span class="sr-only">Loading...</span>
+				<div v-if="loading" id="loading-spinner">
+					<div id="loading-spinner-outer" class="d-flex justify-content-md-center">
+						<div id="loading-spinner-inner" style="" class="spinner-border text-secondary" role="status">
+							<span class="sr-only">Loading...</span>
+						</div>
 					</div>
 				</div>
-				<svg id="dag-panel" class="dag"></svg>
+				<svg v-else id="dag-panel" class="dag"></svg>
 			</div>
 			<!-- /#page-content-wrapper -->
 		
