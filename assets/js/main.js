@@ -1,17 +1,22 @@
 import {i18n, locale_to_flag, locale_to_lang} from './i18n.js';
-import {getAncestors, getWords, mergeEquivalentNodes, mergeNode} from './api.js';
-import {clearDAG, renderDAG, addNode, zoomFitContent, zoomToRootNode} from './dag.js';
-
+import {getAncestors, getWords, mergeEquivalentNodes} from './api.js';
+import {clearDAG, renderDAG, addNode, zoomFitContent, zoomToRootNode, DAGisRendered} from './dag.js';
 
 var app = new Vue({ 
   i18n ,
   data: {
     flag: locale_to_flag[i18n.locale],
     query: null,
-    graph: {},
+    graph: {
+      raw: {},
+      merged: {}
+    },
     uri_cache: [],
     query_node_ids: new Set(),
-    menu_toggled: false
+    menu_toggled: false,
+    settings: {
+      'merge_equivalent_nodes': true
+    },
   },
   mounted() {
     if (localStorage.locale) {
@@ -21,10 +26,28 @@ var app = new Vue({
     if (localStorage.menu_toggled) {
       this.menu_toggled = JSON.parse(localStorage.menu_toggled);
     }
+    if (localStorage.settings) {
+      this.settings = {
+        ...this.settings,
+        ...JSON.parse(localStorage.settings)
+      };
+    }
   },
   watch: {
-    menu_toggled(value) {
+    menu_toggled: function (value) {
         localStorage.menu_toggled = value;
+    },
+    "settings": {
+      handler(value, oldValue) {
+        localStorage.settings = JSON.stringify(value);
+      },
+      deep: true
+    },
+    "settings.merge_equivalent_nodes":
+      function () {
+        if (DAGisRendered()) {
+          drawDAG();
+        }
     }
   },
   methods: {
@@ -38,7 +61,8 @@ var app = new Vue({
     searchWord: searchWord,
     toggleMenu: function () {
       this.menu_toggled = !this.menu_toggled
-    }
+    },
+
   }
 }).$mount('#app')
 
@@ -57,33 +81,38 @@ function searchWord(){
           app.query_node_ids.add(node.id);
           query_node_id = node.id;
         }
-        app.graph[node.id] = node;
+        app.graph.raw[node.id] = node;
       },
       function(graph, last_node_id){
         spinner.removeAttr("style").css({
           'opacity' : '0%',
           'height' : '0%'
         });
-        if ((Object.keys(graph).length == 0) && app.graph[last_node_id] !== undefined) {
+        if ((Object.keys(graph).length == 0) && app.graph.raw[last_node_id] !== undefined) {
           // The query was already in the graph
           app.query_node_ids.add(last_node_id);
         }
-        var merged_graph = mergeEquivalentNodes(app.graph);
-        if (Object.keys(merged_graph).length > 0) {
-          clearDAG();
-          Object.values(merged_graph).forEach(node => {
-            node.is_queried = (app.query_node_ids.has(node.id));
-            addNode(node);
-          });
-          renderDAG();
-        }
-        app.graph = merged_graph;
+        var raw_graph =  jQuery.extend(true, { }, app.graph.raw);
+        app.graph.merged = mergeEquivalentNodes(raw_graph);
+        drawDAG();
       },
       true,
       app.uri_cache
     );
   }
   return true;
+}
+
+function drawDAG() {
+  var graph = (app.settings.merge_equivalent_nodes)? app.graph.merged : app.graph.raw;
+  if (Object.keys(graph).length > 0) {
+    clearDAG();
+    Object.values(graph).forEach(node => {
+      node.is_queried = (app.query_node_ids.has(node.id));
+      addNode(node);
+    });
+    renderDAG();
+  }
 }
 
 $(document).ready(function () {

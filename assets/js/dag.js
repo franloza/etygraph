@@ -6,7 +6,6 @@ const LANGUAGE_MAP = loadLanguageMap();
 
 var g = resetDAG()
 var root_node = undefined;
-var initial_render = true;
 
 function resetDAG() {
     g = new dagreD3.graphlib.Graph({directed:true, compound:true, multigraph:false})
@@ -41,6 +40,10 @@ function getZoom(svg) {
           });
 }
 
+export function DAGisRendered() {
+  return !d3.select(`#${DAG_ELEMENT_ID}`).select("g").empty();
+}
+
 export function renderDAG() {
 
   // Create the renderer
@@ -51,10 +54,10 @@ export function renderDAG() {
   var svg = d3.select(`#${DAG_ELEMENT_ID}`)
               .attr("preserveAspectRatio", "xMinYMin meet")
               .attr("viewBox", "0 0 " + svg_rect.width + " " + svg_rect.height);
-  if (svg.select("g").empty()){
-    var svgGroup = svg.append('g');
-  } else {
+  if (DAGisRendered()){
     var svgGroup = svg.select('g');
+  } else {
+    var svgGroup = svg.append('g');
   }
 
   g.nodes().forEach(function(v) {
