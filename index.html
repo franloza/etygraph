@@ -48,17 +48,20 @@
 						<img src="assets/img/logo.svg"></img>
 					</div>
 					<span id="sidebar-heading-title">Etygraph </span>
-					<span class="flag-icon" :class="['flag-icon-' + flag]"></span>
+					<span class="flag-icon" :class="['flag-icon-' + locale_data[locale].flag]"></span>
 					<span id="sidebar-heading-subtitle"> 0.1.0 </span>
 				</div>
 				<div id="language-config" class="config-menu-item">
-					<li class="dropdown">
-						<span class="dropdown-toggle" id="language-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> {{ $t("message.language") }} </a>
-						<div class="dropdown-menu">
-							<a class="dropdown-item" @click="changeLocale('en')"><span class="flag-icon flag-icon-gb"></span>{{ $t("message.english") }} </a>
-							<a class="dropdown-item" @click="changeLocale('es')"><span class="flag-icon flag-icon-es"></span>{{ $t("message.spanish") }} </a>
-						</div>
-					</li>
+					<span class="dropdown-toggle" id="language-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ $t("message['" + locale_data[locale].name + "']") }}</a>
+					<div class="dropdown-menu">
+						<div v-for="(value, key) in locale_data">
+							<a class="dropdown-item" @click="changeLocale(key)">
+								<span v-bind:class="'flag-icon-' + value.flag" class="flag-icon">
+								</span>{{ $t("message['" + value.name + "']") }}
+							</a>
+						</div>					
+					</div>
+					
 				</div>
 				<div class="config-menu-item">
 					<div id="merge-equivalent-config" class="custom-control custom-switch custom-control-right">
