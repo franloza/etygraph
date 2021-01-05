@@ -6,7 +6,8 @@ const messages = {
             english: 'English',
             spanish: 'Spanish',
             french: 'French',
-            no_results: 'No results'
+            italian: 'Italian',
+            no_results: 'No results',
         }
     },
     es: {
@@ -16,6 +17,7 @@ const messages = {
             english: 'Inglés',
             spanish: 'Español',
             french: "Francés",
+            italian: "Italiano",
             no_results: 'Sin resultados'
         }
     },
@@ -26,9 +28,21 @@ const messages = {
             english: 'Anglaise',
             spanish: 'Espagnole',
             french: 'Français',
+            italian: 'Italien',
             no_results: 'Aucun résultat'
         }
-    }
+    },
+    it: {
+        message: {
+            search: 'Cercare',
+            language: 'Linguaggio',
+            english: 'Inglese',
+            spanish: 'Spagnolo',
+            french: 'Francese',
+            italian: 'Italiano',
+            no_results: 'Nessun risultato'
+        }
+    },
 }
 
 export const i18n = new VueI18n({
@@ -51,4 +65,9 @@ export const locale_data = {
         lang: 'fra',
         name: 'french'
     }, 
+    it : {
+        flag: 'it',
+        lang: 'ita',
+        name: 'italian'
+    }
 }
