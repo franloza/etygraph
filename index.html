@@ -66,13 +66,13 @@
 				<div class="config-menu-item">
 					<div id="merge-equivalent-config" class="custom-control custom-switch custom-control-right">
 						<input id="merge-equivalent-checkbox" class="custom-control-input" type="checkbox" v-model="settings.merge_equivalent_nodes">
-						<label for="merge-equivalent-checkbox" class="custom-control-label">Merge Equivalent Nodes </label>
+						<label for="merge-equivalent-checkbox" class="custom-control-label">{{ $t("message.merge_equivalent_nodes") }}</label>
 					</div>
 				</div>	
 				<div class="config-menu-item">
 					<div id="show-clusters-config" class="custom-control custom-switch custom-control-right">
 						<input id="show-clusters-checkbox" class="custom-control-input" type="checkbox" v-model="settings.show_clusters">
-						<label for="show-clusters-checkbox" class="custom-control-label">Show clusters </label>
+						<label for="show-clusters-checkbox" class="custom-control-label">{{ $t("message.group_by_language") }}</a></label>
 					</div>
 				</div>
 			</div>
@@ -103,7 +103,7 @@
 				</nav>
 				<div v-if="loading" id="loading-spinner">
 					<div id="loading-spinner-outer" class="d-flex justify-content-md-center">
-						<div id="loading-spinner-inner" style="" class="spinner-border text-secondary" role="status">
+						<div id="loading-spinner-inner" class="spinner-border text-secondary" role="status">
 							<span class="sr-only">Loading...</span>
 						</div>
 					</div>

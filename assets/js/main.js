@@ -56,7 +56,6 @@ var app = new Vue({
       if (i18n.messages[locale] !== undefined) {
         this.locale = locale;
         i18n.locale = locale;
-
         localStorage.locale = locale;
       }   
     },

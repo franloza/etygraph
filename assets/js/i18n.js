@@ -7,7 +7,10 @@ const messages = {
             spanish: 'Spanish',
             french: 'French',
             italian: 'Italian',
+            portuguese: 'Portuguese',
             no_results: 'No results',
+            group_by_language: 'Group by language',
+            merge_equivalent_nodes: 'Merge equivalent nodes'
         }
     },
     es: {
@@ -18,7 +21,10 @@ const messages = {
             spanish: 'Español',
             french: "Francés",
             italian: "Italiano",
-            no_results: 'Sin resultados'
+            portuguese: "Portugués",
+            no_results: 'Sin resultados',
+            group_by_language: 'Agrupar por idioma',
+            merge_equivalent_nodes: 'Unir nodos equivalentes'
         }
     },
     fr: {
@@ -29,7 +35,8 @@ const messages = {
             spanish: 'Espagnole',
             french: 'Français',
             italian: 'Italien',
-            no_results: 'Aucun résultat'
+            portuguese: 'Portugais',
+            no_results: 'Aucun résultat',
         }
     },
     it: {
@@ -40,13 +47,27 @@ const messages = {
             spanish: 'Spagnolo',
             french: 'Francese',
             italian: 'Italiano',
-            no_results: 'Nessun risultato'
+            portuguese: 'Portoghese',
+            no_results: 'Nessun risultato',
         }
     },
+    pt: {
+        message: {
+            search: 'Pesquisa',
+            language: 'Língua',
+            english: 'Inglês',
+            spanish: 'Espanhol',
+            french: 'Francês',
+            italian: 'Italiano',
+            portuguese: 'Português',
+            no_results: 'Sem resultados',
+        }
+    }
 }
 
 export const i18n = new VueI18n({
     messages,
+    fallbackLocale: 'en'
 })
 
 export const locale_data = {
@@ -69,5 +90,10 @@ export const locale_data = {
         flag: 'it',
         lang: 'ita',
         name: 'italian'
+    },
+    pt: {
+        flag: 'pt',
+        lang: 'por',
+        name: 'portuguese'
     }
 }
