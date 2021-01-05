@@ -15,7 +15,8 @@ var app = new Vue({
     query_node_ids: new Set(),
     menu_toggled: false,
     settings: {
-      'merge_equivalent_nodes': true
+      'merge_equivalent_nodes': true,
+      'show_clusters': true
     },
   },
   mounted() {
@@ -38,17 +39,14 @@ var app = new Vue({
         localStorage.menu_toggled = value;
     },
     "settings": {
-      handler(value, oldValue) {
+      handler(value) {
         localStorage.settings = JSON.stringify(value);
       },
       deep: true
     },
-    "settings.merge_equivalent_nodes":
-      function () {
-        if (DAGisRendered()) {
-          drawDAG();
-        }
-    }
+    "settings.merge_equivalent_nodes": redrawDAG,
+    "settings.show_clusters": redrawDAG,
+
   },
   methods: {
     changeLocale: function (locale) {
@@ -109,9 +107,15 @@ function drawDAG() {
     clearDAG();
     Object.values(graph).forEach(node => {
       node.is_queried = (app.query_node_ids.has(node.id));
-      addNode(node);
+      addNode(node, app.settings.show_clusters);
     });
     renderDAG();
+  }
+}
+
+function redrawDAG() {
+  if (DAGisRendered()) {
+    drawDAG();
   }
 }
 

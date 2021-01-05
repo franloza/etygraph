@@ -88,7 +88,7 @@ export function renderDAG() {
 }
 
 // Add nodes and edges from API node data
-export function addNode(data) {
+export function addNode(data, add_cluster=true) {
   if (data.is_queried) {
     root_node = data.id
     var node_class = "queried";
@@ -96,6 +96,7 @@ export function addNode(data) {
   else {
     var node_class = "non-queried";
   }
+  var language_name = LANGUAGE_MAP[data.lang];
   g.setNode(data.id, 
     {
       labelType: "html",
@@ -109,8 +110,7 @@ export function addNode(data) {
         label_row.text(data.label);
         label_row.attr("class", "word_label");
         tr = d3.select(table).append("tr");
-        if (LANGUAGE_MAP[data.lang] != undefined) {
-          var language_name = LANGUAGE_MAP[data.lang];
+        if (language_name != undefined) {
           var lang_row = tr.append("td").append("div");
           lang_row.attr("class", "word_lang");
           lang_row.text(language_name)
@@ -118,7 +118,11 @@ export function addNode(data) {
         return table;
       },
       class: node_class
-    })
+    });
+  if (add_cluster && language_name != undefined) {
+    g.setNode(language_name, {label: language_name, clusterLabelPos: 'top', style: 'fill: #d3d7e8'});
+    g.setParent(data.id, language_name);
+  }
   data.relative_ids.forEach(element => {
     g.setEdge(element, data.id, {
       curve: d3.curveBasis
