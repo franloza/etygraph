@@ -1,6 +1,7 @@
 import {loadLanguageMap} from './data/load.js';
 
 const DAG_ELEMENT_ID = 'dag-panel'
+const MODAL_ELEMENT_ID = 'node-modal'
 const DEFAULT_SCALE = 1;
 const LANGUAGE_MAP = loadLanguageMap();
 
@@ -44,13 +45,12 @@ export function DAGisRendered() {
   return !d3.select(`#${DAG_ELEMENT_ID}`).select("g").empty();
 }
 
-export function renderDAG() {
+export function renderDAG(node_on_click_callback=undefined) {
 
   // Create the renderer
   var render = new dagreD3.render();
 
   // Set up an SVG group so that we can translate the final graph.
-  var svg_rect = document.getElementById(DAG_ELEMENT_ID).getBoundingClientRect();
   var svg = d3.select(`#${DAG_ELEMENT_ID}`).attr("preserveAspectRatio", "xMinYMin meet")
 
   if (DAGisRendered()){
@@ -65,6 +65,8 @@ export function renderDAG() {
     node.rx = node.ry = 5;
   });
 
+  // Add listeners to the nodes
+
   zoomToRootNode();
   render(svgGroup, g);
   zoomToRootNode();
@@ -77,8 +79,12 @@ export function renderDAG() {
       labels_width.push(parseInt(d3.select(this).attr("width")));
     }
   );
-  d3.selectAll(".node")
-      .select("rect")
+  var nodes = d3.selectAll("g.node")
+                .attr('data-toggle', 'modal')
+                .attr('data-target', `#${MODAL_ELEMENT_ID}`)
+                .attr('role', 'button')
+                .on("click", node_on_click_callback); 
+  nodes.select("rect")
       .attr("height", function(d,i){
         return (labels_height[i] || 0) + 20;
       }).attr("width", function(d,i){

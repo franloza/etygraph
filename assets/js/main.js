@@ -18,6 +18,10 @@ var app = new Vue({
       'merge_equivalent_nodes': true,
       'show_clusters': true
     },
+    modal_node_info : {
+      'title': '',
+      'wiktionary_link': '#'
+    },
     loading: false,
     locale_data: locale_data,
     locale: 'en'
@@ -124,7 +128,11 @@ function drawDAG() {
       node.is_queried = (app.query_node_ids.has(node.id));
       addNode(node, app.settings.show_clusters);
     });
-    renderDAG();
+    renderDAG(function (node_id) {
+      var node = graph[node_id];
+      app.modal_node_info.title = node['label'];
+      app.modal_node_info.wiktionary_link = node['links'].values().next().value;
+    });
   }
 }
 
