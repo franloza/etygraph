@@ -1,5 +1,6 @@
 import {i18n, locale_data} from './i18n.js';
-import {getAncestors, getWords, mergeEquivalentNodes} from './api.js';
+import {getAncestors, getWords, mergeEquivalentNodes} from './api/etytree.js';
+import {getHTMLContentFromUrl} from './api/wiktionary.js';
 import {clearDAG, renderDAG, addNode, zoomFitContent, zoomToRootNode, DAGisRendered} from './dag.js';
 
 var app = new Vue({ 
@@ -20,7 +21,8 @@ var app = new Vue({
     },
     modal_node_info : {
       'title': '',
-      'wiktionary_link': '#'
+      'wiktionary_link': '#',
+      'body': ''
     },
     loading: false,
     locale_data: locale_data,
@@ -129,9 +131,15 @@ function drawDAG() {
       addNode(node, app.settings.show_clusters);
     });
     renderDAG(function (node_id) {
+      // Get contents of modal window
       var node = graph[node_id];
+      var main_wiktionary_link = node['links'].values().next().value
       app.modal_node_info.title = node['label'];
-      app.modal_node_info.wiktionary_link = node['links'].values().next().value;
+      app.modal_node_info.wiktionary_link = main_wiktionary_link;
+      app.modal_node_info.body = 'Loading...'
+      getHTMLContentFromUrl(main_wiktionary_link, function(text) {
+        app.modal_node_info.body = text
+      })
     });
   }
 }
