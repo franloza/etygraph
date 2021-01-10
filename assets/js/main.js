@@ -24,6 +24,7 @@ var app = new Vue({
       'wiktionary_link': '#',
       'body': ''
     },
+    modal_node_cache: {},
     loading: false,
     locale_data: locale_data,
     locale: 'en'
@@ -146,14 +147,25 @@ function drawDAG() {
         section = page_info.section;
       }
       app.modal_node_info.body = loading_message;
-      getHTMLContentFromPage(page, section, function(url, text) {
+
+      var callback = function(url, text) {
         app.modal_node_info.wiktionary_link = url;
         app.modal_node_info.body = text
-      },
-      function(error) {
-        app.modal_node_info.body = error_message;
-        app.modal_node_info.wiktionary_link = undefined;
-      })     
+        app.modal_node_cache[String([page,section])] = {url: url, text:text}
+      };
+
+      // Look up in the cache
+      var node_cache = app.modal_node_cache[String([page,section])];
+      if (node_cache !== undefined) {
+        callback(node_cache.url, node_cache.text)
+      }
+      else {
+        getHTMLContentFromPage(page, section, callback,
+          function(error) {
+            app.modal_node_info.body = error_message;
+            app.modal_node_info.wiktionary_link = undefined;
+          }) 
+      } 
     });
   }
 }
