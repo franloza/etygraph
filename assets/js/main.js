@@ -1,6 +1,6 @@
 import {i18n, locale_data} from './i18n.js';
 import {getAncestors, getWords, mergeEquivalentNodes} from './api/etytree.js';
-import {getHTMLContentFromUrl} from './api/wiktionary.js';
+import {getPageFromURL, getHTMLContentFromPage} from './api/wiktionary.js';
 import {clearDAG, renderDAG, addNode, zoomFitContent, zoomToRootNode, DAGisRendered} from './dag.js';
 
 var app = new Vue({ 
@@ -133,13 +133,27 @@ function drawDAG() {
     renderDAG(function (node_id) {
       // Get contents of modal window
       var node = graph[node_id];
-      var main_wiktionary_link = node['links'].values().next().value
+      var loading_message = 'Loading...';
+      var error_message = 'This information is not available';
       app.modal_node_info.title = node['label'];
-      app.modal_node_info.wiktionary_link = main_wiktionary_link;
-      app.modal_node_info.body = 'Loading...'
-      getHTMLContentFromUrl(main_wiktionary_link, function(text) {
+      var section = undefined;
+      if(node.wiktionary_link === undefined) {
+        // "Nos tiramos el triple" (Spanish expression for "Try a three-point shoot". Meaning: Give a try) 
+        var page = node.label;
+      } else {
+        var page_info = getPageFromURL(node.wiktionary_link);
+        var page = page_info.page;
+        section = page_info.section;
+      }
+      app.modal_node_info.body = loading_message;
+      getHTMLContentFromPage(page, section, function(url, text) {
+        app.modal_node_info.wiktionary_link = url;
         app.modal_node_info.body = text
-      })
+      },
+      function(error) {
+        app.modal_node_info.body = error_message;
+        app.modal_node_info.wiktionary_link = undefined;
+      })     
     });
   }
 }

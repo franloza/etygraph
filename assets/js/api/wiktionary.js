@@ -1,29 +1,30 @@
-const BASE_URL = "en.wiktionary.org";
-const API_ENDPOINT = "https://" + BASE_URL + '/w/api.php';
+const BASE_URL = "https://en.wiktionary.org";
+const API_ENDPOINT = BASE_URL + '/w/api.php';
 
-
-export function getHTMLContentFromUrl(url, callback) {
+export function getPageFromURL(url) {
     var section = undefined;
     if (url.includes('#')) {
         // Contains language section
         var split_url = url.split('#'), url = split_url[0], section = split_url[1];
-        console.log(url);
     }
-    var page = url.split('/').slice(-1)[0];
+    var page = url.split('wiki/').slice(-1)[0];
+    return {page: page, section: section}
+}
+
+export function getHTMLContentFromPage(page, section, callback, error_callback) {
+    var url = BASE_URL + "/wiki/" + page;
+    if (section !== undefined) {
+        url += "#" + section
+    }
     var wrapper = function (content) {
-        var clean_content = cleanHTMLPage(content);
-        if (section !== undefined) {
-            var section_node = $(`div#section-lang-${section}`, clean_content).clone();
-            clean_content.empty();
-            clean_content.append(section_node);
-        }
-        callback(clean_content[0].outerHTML);
+        var clean_content = cleanHTMLPage(content, section);
+        callback(url, clean_content[0].outerHTML);
     }
-    getHTMLPage(page, wrapper);
+    getHTMLPage(page, wrapper, error_callback);
 }
 
 
-function cleanHTMLPage(page) {
+function cleanHTMLPage(page, section) {
     // Create containers and tags for sections
     var root = $(page);
     var new_page = page;
@@ -49,6 +50,9 @@ function cleanHTMLPage(page) {
             in_section = true;
             section_node = $('<div></div>')
             section_node.attr('id', "section-lang-" + $('.mw-headline', node).first().attr('id'))
+            if (section === undefined) {
+                section_node.append(node);
+            }  
         }
         else {
             if (in_section) {
@@ -69,16 +73,40 @@ function cleanHTMLPage(page) {
         new_root.append(section_node)
     }
 
+    // Keep only the section
+    if (section !== undefined) {
+        var section_node = $(`div#section-lang-${section}`, new_root).clone();
+        new_root.empty();
+        new_root.append(section_node);
+    }
+
     // Remove edit sections
     $('.mw-editsection', new_root).remove();
+
+    // Remove table of contents
+    $('.toc', new_root).remove();
+
+    // Remove blocks before first section
+    $(".section-level-2", new_root).remove();
 
     // Remove conjugations
     $("[id^='section-4-Conjugation']", new_root).remove();
 
+    // Remove declensions
+    $("[id^='section-4-Declension']", new_root).remove();
+
+    // Fix relative links and open links in new page
+    $("a", new_root).attr('href', function(index,value) {
+        if (value !== undefined && value.startsWith('/')) {
+            value = BASE_URL + value;
+        }
+        return value
+    }).attr('target', '_blank');
+
     return new_root
 }
 
-function getHTMLPage(page, callback) {
+function getHTMLPage(page, callback, error_callback) {
   axios.get(API_ENDPOINT, {
     params: {
       action: 'parse',
@@ -97,7 +125,7 @@ function getHTMLPage(page, callback) {
     callback(data.parse.text)
   })
   .catch(function (error) {
-    console.log(error);
+    error_callback(error)
   });  
 }
 
