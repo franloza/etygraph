@@ -89,6 +89,9 @@ function cleanHTMLPage(page, section) {
     // Remove blocks before first section
     $(".section-level-2", new_root).remove();
 
+    // Remove inflections
+    $("[id^='section-4-Inflection']", new_root).remove();
+
     // Remove conjugations
     $("[id^='section-4-Conjugation']", new_root).remove();
 
