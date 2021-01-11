@@ -89,15 +89,13 @@ function cleanHTMLPage(page, section) {
     // Remove blocks before first section
     $(".section-level-2", new_root).remove();
 
-    // Remove inflections
-    $("[id^='section-4-Inflection']", new_root).remove();
-
-    // Remove conjugations
-    $("[id^='section-4-Conjugation']", new_root).remove();
-
-    // Remove declensions
-    $("[id^='section-4-Declension']", new_root).remove();
-
+    // Remove inflections, conjugations and declesions
+    for (const block of ['Inflection', 'Conjugation','Declesion']) {
+        for (const level of [4,5]) {
+            $(`[id^='section-${level}-${block}']`, new_root).remove();
+        }
+    }
+    
     // Fix relative links and open links in new page
     $("a", new_root).attr('href', function(index,value) {
         if (value !== undefined && value.startsWith('/')) {
@@ -131,6 +129,3 @@ function getHTMLPage(page, callback, error_callback) {
     error_callback(error)
   });  
 }
-
-
-//action=parse&page=preguntar&prop=text&formatversion=2&format=json
