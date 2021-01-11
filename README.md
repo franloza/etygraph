@@ -15,3 +15,4 @@ Discover the origin of the words. Try it in [https://etygraph.netlify.app](https
 ## Screenshots
 ![Screenshot 1](./assets/img/screenshot_1.png)
 ![Screenshot 2](./assets/img/screenshot_2.png)
+![Screenshot 2](./assets/img/screenshot_3.png)

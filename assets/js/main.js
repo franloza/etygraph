@@ -1,5 +1,6 @@
 import {i18n, locale_data} from './i18n.js';
-import {getAncestors, getWords, mergeEquivalentNodes} from './api.js';
+import {getAncestors, getWords, mergeEquivalentNodes} from './api/etytree.js';
+import {getPageFromURL, getHTMLContentFromPage} from './api/wiktionary.js';
 import {clearDAG, renderDAG, addNode, zoomFitContent, zoomToRootNode, DAGisRendered} from './dag.js';
 
 var app = new Vue({ 
@@ -18,6 +19,13 @@ var app = new Vue({
       'merge_equivalent_nodes': true,
       'show_clusters': true
     },
+    modal_node_info : {
+      'title': '',
+      'wiktionary_link': '#',
+      'body': '',
+      'found': false
+    },
+    modal_node_cache: {},
     loading: false,
     locale_data: locale_data,
     locale: 'en'
@@ -124,7 +132,44 @@ function drawDAG() {
       node.is_queried = (app.query_node_ids.has(node.id));
       addNode(node, app.settings.show_clusters);
     });
-    renderDAG();
+    renderDAG(function (node_id) {
+      // Get contents of modal window
+      var node = graph[node_id];
+      var loading_message = i18n.t('message.loading') + "...";
+      var error_message = i18n.t('message.info_not_available');
+      app.modal_node_info.title = node['label'];
+      var section = undefined;
+      if(node.wiktionary_link === undefined) {
+        // "Nos tiramos el triple" (Spanish expression for "Try a three-point shoot". Meaning: Give a try) 
+        var page = node.label;
+      } else {
+        var page_info = getPageFromURL(node.wiktionary_link);
+        var page = page_info.page;
+        section = page_info.section;
+      }
+      app.modal_node_info.body = loading_message;
+
+      var callback = function(url, text) {
+        app.modal_node_info.wiktionary_link = url;
+        app.modal_node_info.body = text
+        app.modal_node_cache[String([page,section])] = {url: url, text:text}
+        app.modal_node_info.found = true;
+      };
+
+      // Look up in the cache
+      var node_cache = app.modal_node_cache[String([page,section])];
+      if (node_cache !== undefined) {
+        callback(node_cache.url, node_cache.text)
+      }
+      else {
+        getHTMLContentFromPage(page, section, callback,
+          function(error) {
+            app.modal_node_info.body = error_message;
+            app.modal_node_info.wiktionary_link = undefined;
+            app.modal_node_info.found = false;
+          }) 
+      } 
+    });
   }
 }
 

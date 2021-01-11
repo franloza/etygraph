@@ -46,6 +46,9 @@ export function mergeNode(node_a, node_b) {
   node_a.equivalent_uris = new Set([...node_a.equivalent_uris, ...node_b.equivalent_uris]);
   node_a.links == new Set([...node_a.links, ...node_b.links]);
   node_a.uris == new Set([...node_a.uris, ...node_b.uris]);
+  if (node_a.wiktionary_link == undefined) {
+    node_a.wiktionary_link = node_b.wiktionary_link;
+  }
   return node_a
 }
 
@@ -242,9 +245,13 @@ function parseResponse(raw) {
       }
       else if(field_id.includes('#seeAlso')) {
         node.links = new Set(field_data.map(element => element.value))
+        if (uri.includes('__ee_1_') && field_data.length > 0) {
+          node.wiktionary_link = field_data[0].value;
+        }
       }
     }
   }
   return node;
 }
+
 
