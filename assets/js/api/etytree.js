@@ -56,7 +56,7 @@ export function mergeNode(node_a, node_b) {
 function _getAncestors(uri, on_add_node_callback, on_finish_callback, recursive, depth, processed, result, pending) {
   function describeUriCallback (url, data) {
     pending.pop();
-    var parsed = parseResponse(data);
+    var parsed = parseDescribeUriResponse(data);
 
     if (parsed !== undefined) {
       if (result[parsed.id] !== undefined) {
@@ -195,6 +195,59 @@ export function getWords(word, lang, callback) {
   });
 }
 
+export function getDescendants(uris, on_add_node_callback, on_finish_callback, processed=undefined) {
+  if (processed === undefined) {
+    processed = [];
+  } 
+  var pending = [];
+  var result = {}
+  for (const parent_uri of uris) {
+    getDescendantsFromUri(parent_uri, function(data) {
+      var descendant_uris = parseGetDescendantsFromUriResponse(data);
+      for (const descendant_uri of descendant_uris) {
+        if (!processed.includes(descendant_uri) && !pending.includes(descendant_uri)) {
+          pending.push(descendant_uri);
+          var describeUriCallback = function (url, data) {
+            pending.pop();
+            var parsed = parseDescribeUriResponse(data);
+            if (result[parsed.id] !== undefined) {
+              // Two nodes with same ID and different URIs
+              var node = parsed;
+              result[parsed.id] = mergeNode(node, result[parsed.id]);
+            }
+            else {
+              var node = parsed;
+              result[parsed.id] = parsed;
+            }
+            on_add_node_callback(node);
+            processed.push(url);
+            if (pending.length == 0) {
+              on_finish_callback(result);
+            }
+          };
+          describeUri(descendant_uri, function(data) {
+            describeUriCallback(descendant_uri, data);
+          });
+        }
+      }
+   });
+  }
+  if (pending.length == 0) {
+    on_finish_callback(result);
+  }
+
+}
+
+function getDescendantsFromUri(uri, callback) {
+  var query = `
+  SELECT DISTINCT ?descendant {    
+    ?descendant dbetym:etymologicallyRelatedTo* <${uri}> .    
+  }
+  `;
+  sparqlQuery(query, function (data) {
+    callback(data)
+  });
+}
 
 function describeUri(uri, callback) {
   var query = `
@@ -226,7 +279,15 @@ function sparqlQuery(query, callback) {
   });  
 }
 
-function parseResponse(raw) {
+function parseGetDescendantsFromUriResponse(raw) {
+  var descendant_uris = new Set();
+  for (const binding of raw.results.bindings) {
+    descendant_uris.add(binding.descendant.value)
+  }
+  return descendant_uris
+}
+
+function parseDescribeUriResponse(raw) {
   for (const [uri, fields] of Object.entries(raw)) {
     var id =  getId(uri);
     var node = {id:id, relative_ids: new Set(), relative_uris: new Set(), equivalent_ids: new Set(), equivalent_uris: new Set(), links: new Set(), uris: new Set()};

@@ -1,5 +1,5 @@
 import {i18n, locale_data} from './i18n.js';
-import {getAncestors, getWords, mergeEquivalentNodes} from './api/etytree.js';
+import {getAncestors,getDescendants, getWords, mergeEquivalentNodes} from './api/etytree.js';
 import {getPageFromURL, getHTMLContentFromPage} from './api/wiktionary.js';
 import {clearDAG, renderDAG, addNode, zoomFitContent, zoomToRootNode, DAGisRendered} from './dag.js';
 
@@ -23,7 +23,8 @@ var app = new Vue({
       'title': '',
       'wiktionary_link': '#',
       'body': '',
-      'found': false
+      'found': false,
+      'uris': []
     },
     modal_node_cache: {},
     loading: false,
@@ -79,7 +80,8 @@ var app = new Vue({
       this.query_node_ids = new Set();
       this.query = '';
       clearDAG();
-    }
+    },
+    addDescendants
   }
 }).$mount('#app')
 
@@ -118,10 +120,39 @@ function searchWord(){
     } catch (error) {
       console.error(error);
       successful = false;
+      app.loading = false;
     }
   }
-  //app.loading = false;
   return successful;
+}
+
+function addDescendants() {
+  app.loading = true;
+  var successful = true;
+  if (app.modal_node_info.uris !== undefined && app.modal_node_info.uris.size > 0) {
+    try {
+      getDescendants(
+        app.modal_node_info.uris,
+        function (node) {
+          if (app.graph.raw[node.id] === undefined) {
+            app.graph.raw[node.id] = node;
+          }
+        },
+        function (result) {
+          var raw_graph =  jQuery.extend(true, { }, app.graph.raw);
+          app.graph.merged = mergeEquivalentNodes(raw_graph);
+          app.loading = false;
+          Vue.nextTick(drawDAG);
+        },
+        app.uri_cache)
+    }
+    catch (error) {
+      console.error(error);
+      successful = false;
+      app.loading = false;
+    }
+  }
+  return successful
 }
 
 function drawDAG() {
@@ -138,6 +169,7 @@ function drawDAG() {
       var loading_message = i18n.t('message.loading') + "...";
       var error_message = i18n.t('message.info_not_available');
       app.modal_node_info.title = node['label'];
+      app.modal_node_info.uris = node['uris'];
       var section = undefined;
       if(node.wiktionary_link === undefined) {
         // "Nos tiramos el triple" (Spanish expression for "Try a three-point shoot". Meaning: Give a try) 

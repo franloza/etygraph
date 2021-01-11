@@ -15,7 +15,8 @@ const messages = {
             merge_equivalent_nodes: 'Merge equivalent nodes',
             loading: 'Loading',
             info_not_available: 'This information is not available',
-            close: 'Close'
+            close: 'Close',
+            add_descendants: 'Add descendants'
         }
     },
     es: {
@@ -34,7 +35,8 @@ const messages = {
             merge_equivalent_nodes: 'Unir nodos equivalentes',
             loading: 'Cargando',
             info_not_available: 'Esta información no está disponible',
-            close: 'Cerrar'
+            close: 'Cerrar',
+            add_descendants: 'Añadir descendientes'
         }
     },
     fr: {
@@ -52,7 +54,8 @@ const messages = {
             merge_equivalent_nodes: 'Rejoindre des nœuds équivalents',   
             loading: 'Chargement',
             info_not_available: 'Cette information n\'est pas disponible',
-            close: 'Fermer'
+            close: 'Fermer',
+            add_descendants: 'Ajouter des descendants'
         }
     },
     it: {
@@ -71,7 +74,8 @@ const messages = {
             merge_equivalent_nodes: 'Unisci nodi equivalenti',
             loading: 'Caricamento',
             info_not_available: 'Questa informazione non è disponibile',
-            close: 'Chiudere'
+            close: 'Chiudere',
+            add_descendants: 'Aggiungi discendenti'
         }
     },
     pt: {
@@ -90,7 +94,8 @@ const messages = {
             merge_equivalent_nodes: 'Junte nós equivalentes',
             loading: 'Carregamento',
             info_not_available: 'Esta informação não está disponível',
-            close: 'Fechar'
+            close: 'Fechar',
+            add_descendants: 'Adicionar descendentes'
         }
     },
     ca: {
@@ -109,7 +114,8 @@ const messages = {
             merge_equivalent_nodes: 'Unir nodes equivalents',
             loading: 'Carregant',
             info_not_available: 'Aquesta informació no està disponible',
-            close: 'Tancar'
+            close: 'Tancar',
+            add_descendants: 'Afegir descendents'
         }
     },
     ga: {
@@ -128,7 +134,8 @@ const messages = {
             merge_equivalent_nodes: 'Unir nodos equivalentes',
             loading: 'Cargando',
             info_not_available: 'Esta información non está dispoñible',
-            close: 'Pechar'
+            close: 'Pechar',
+            add_descendants: 'Engade descendentes'
         }
     }
 }
