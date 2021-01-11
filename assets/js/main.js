@@ -22,7 +22,8 @@ var app = new Vue({
     modal_node_info : {
       'title': '',
       'wiktionary_link': '#',
-      'body': ''
+      'body': '',
+      'found': false
     },
     modal_node_cache: {},
     loading: false,
@@ -134,8 +135,8 @@ function drawDAG() {
     renderDAG(function (node_id) {
       // Get contents of modal window
       var node = graph[node_id];
-      var loading_message = 'Loading...';
-      var error_message = 'This information is not available';
+      var loading_message = i18n.t('message.loading') + "...";
+      var error_message = i18n.t('message.info_not_available');
       app.modal_node_info.title = node['label'];
       var section = undefined;
       if(node.wiktionary_link === undefined) {
@@ -152,6 +153,7 @@ function drawDAG() {
         app.modal_node_info.wiktionary_link = url;
         app.modal_node_info.body = text
         app.modal_node_cache[String([page,section])] = {url: url, text:text}
+        app.modal_node_info.found = true;
       };
 
       // Look up in the cache
@@ -164,6 +166,7 @@ function drawDAG() {
           function(error) {
             app.modal_node_info.body = error_message;
             app.modal_node_info.wiktionary_link = undefined;
+            app.modal_node_info.found = false;
           }) 
       } 
     });

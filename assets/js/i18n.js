@@ -12,7 +12,10 @@ const messages = {
             galician: 'Galician',
             no_results: 'No results',
             group_by_language: 'Group by language',
-            merge_equivalent_nodes: 'Merge equivalent nodes'
+            merge_equivalent_nodes: 'Merge equivalent nodes',
+            loading: 'Loading',
+            info_not_available: 'This information is not available',
+            close: 'Close'
         }
     },
     es: {
@@ -28,7 +31,10 @@ const messages = {
             galician: 'Gallego',
             no_results: 'Sin resultados',
             group_by_language: 'Agrupar por idioma',
-            merge_equivalent_nodes: 'Unir nodos equivalentes'
+            merge_equivalent_nodes: 'Unir nodos equivalentes',
+            loading: 'Cargando',
+            info_not_available: 'Esta información no está disponible',
+            close: 'Cerrar'
         }
     },
     fr: {
@@ -43,7 +49,10 @@ const messages = {
             galician: 'Galicien',
             no_results: 'Aucun résultat',
             group_by_language: 'Grouper par langue',
-            merge_equivalent_nodes: 'Rejoindre des nœuds équivalents',            
+            merge_equivalent_nodes: 'Rejoindre des nœuds équivalents',   
+            loading: 'Chargement',
+            info_not_available: 'Cette information n\'est pas disponible',
+            close: 'Fermer'
         }
     },
     it: {
@@ -59,7 +68,10 @@ const messages = {
             galician: 'Galiziano',
             no_results: 'Nessun risultato',
             group_by_language: 'Raggruppa per lingua',
-            merge_equivalent_nodes: 'Unisci nodi equivalenti'           
+            merge_equivalent_nodes: 'Unisci nodi equivalenti',
+            loading: 'Caricamento',
+            info_not_available: 'Questa informazione non è disponibile',
+            close: 'Chiudere'
         }
     },
     pt: {
@@ -75,7 +87,10 @@ const messages = {
             galician: 'Galego',
             no_results: 'Sem resultados',
             group_by_language: 'Grupo por idioma',
-            merge_equivalent_nodes: 'Junte nós equivalentes' 
+            merge_equivalent_nodes: 'Junte nós equivalentes',
+            loading: 'Carregamento',
+            info_not_available: 'Esta informação não está disponível',
+            close: 'Fechar'
         }
     },
     ca: {
@@ -91,7 +106,10 @@ const messages = {
             galician: 'Gallec',
             no_results: 'Sense resultats',
             group_by_language: 'Agrupar per idioma',
-            merge_equivalent_nodes: 'Unir nodes equivalents' 
+            merge_equivalent_nodes: 'Unir nodes equivalents',
+            loading: 'Carregant',
+            info_not_available: 'Aquesta informació no està disponible',
+            close: 'Tancar'
         }
     },
     ga: {
@@ -107,7 +125,10 @@ const messages = {
             galician: 'Galego',
             no_results: 'Sen resultados',
             group_by_language: 'Grupo por idioma',
-            merge_equivalent_nodes: 'Unir nodos equivalentes'
+            merge_equivalent_nodes: 'Unir nodos equivalentes',
+            loading: 'Cargando',
+            info_not_available: 'Esta información non está dispoñible',
+            close: 'Pechar'
         }
     }
 }
