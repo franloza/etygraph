@@ -1,10 +1,16 @@
 import {i18n, locale_data} from './i18n.js';
 import {getAncestors,getDescendants, getWords, mergeEquivalentNodes} from './api/etytree.js';
 import {getPageFromURL, getHTMLContentFromPage} from './api/wiktionary.js';
-import {clearDAG, renderDAG, addNode, zoomFitContent, zoomToRootNode, DAGisRendered} from './dag.js';
+import {clearDAG, renderDAG, addNode, removeNode, zoomFitContent, zoomToRootNode, DAGisRendered, LANGUAGE_MAP} from './dag.js';
+
+
+var multiselect = Vue.component('vue-multiselect', window.VueMultiselect.default)
 
 var app = new Vue({ 
   i18n ,
+  components: {
+    'multiselect': multiselect
+  },
   data: {
     // Default variables
     query: '',
@@ -17,7 +23,8 @@ var app = new Vue({
     menu_toggled: false,
     settings: {
       'merge_equivalent_nodes': true,
-      'show_clusters': true
+      'show_clusters': true,
+      'filter_languages': false
     },
     modal_node_info : {
       'title': '',
@@ -27,10 +34,16 @@ var app = new Vue({
       'found': false,
       'uris': []
     },
+    graph_languages: {
+      data: {},
+      options: [],
+      selected: []
+    },
+    removed_nodes: [],
     modal_node_cache: {},
     loading: false,
     locale_data: locale_data,
-    locale: 'en'
+    locale: 'en',
   },
   mounted() {
     if (localStorage.locale) {
@@ -59,6 +72,8 @@ var app = new Vue({
     },
     "settings.merge_equivalent_nodes": redrawDAG,
     "settings.show_clusters": redrawDAG,
+    "settings.filter_languages": redrawDAG,
+    "graph_languages.selected": redrawDAG,
 
   },
   methods: {
@@ -80,9 +95,14 @@ var app = new Vue({
       this.uri_cache = [];
       this.query_node_ids = new Set();
       this.query = '';
+      this.removed_nodes = [];
       clearDAG();
     },
-    addDescendants
+    addDescendants,
+    removeNode: function (){
+      app.removed_nodes.push(app.modal_node_info.node_id);
+      redrawDAG();
+    }
   }
 }).$mount('#app')
 
@@ -160,11 +180,58 @@ function drawDAG() {
   var graph = (app.settings.merge_equivalent_nodes)? app.graph.merged : app.graph.raw;
   if (Object.keys(graph).length > 0) {
     clearDAG();
+    var lang_to_node = {}
+    var selected_langs = app.graph_languages.selected.map(function(elem) {return elem.id});
+    var filter_languages = (selected_langs.length > 0) && (app.settings.filter_languages);
     Object.values(graph).forEach(node => {
       node.is_queried = (app.query_node_ids.has(node.id));
-      addNode(node, app.settings.show_clusters);
+      if (lang_to_node[node.lang] === undefined) {
+        lang_to_node[node.lang] = [node.id];
+      } else {
+        lang_to_node[node.lang].push(node.id);
+      }
+      if (app.graph_languages.data[node.lang] === undefined) {
+        app.graph_languages.data[node.lang] = {name: LANGUAGE_MAP[node.lang], id: node.lang}
+      }
+      var show_clusters = app.settings.show_clusters;
+      if (filter_languages) {
+        show_clusters = show_clusters && selected_langs.includes(node.lang);
+      }
+      if (app.removed_nodes.includes(node.id)) {
+          show_clusters = false;
+      }
+      addNode(node, show_clusters);
     });
+    app.removed_nodes.forEach(node_id => { 
+        removeNode(node_id);
+    });
+    if (filter_languages) {
+      var nodes_to_keep = []
+      app.graph_languages.selected.forEach(lang => {
+        nodes_to_keep = nodes_to_keep.concat(lang_to_node[lang.id])
+      });
+      app.query_node_ids.forEach(node_id => {
+        if (!nodes_to_keep.includes(node_id)) {
+          nodes_to_keep.push(node_id);
+        }
+      });
+      Object.values(graph).forEach(node => { 
+        if (!nodes_to_keep.includes(node.id)) {
+          removeNode(node.id);
+        }
+      });
+    }
+
+    // Languages Dropdown
+    var languages_options = [];
+    for (const [key,value] of Object.entries(app.graph_languages.data)) {
+      languages_options.push(value)
+    } 
+    Vue.set(app.graph_languages, 'options', languages_options);
+
     renderDAG(function (node_id) {
+      console.log(app.graph_languages);
+      
       // Get contents of modal window
       var node = graph[node_id];
       var loading_message = i18n.t('message.loading') + "...";
@@ -212,6 +279,7 @@ function redrawDAG() {
     drawDAG();
   }
 }
+
 
 $(document).ready(function () {
 

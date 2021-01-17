@@ -33,6 +33,10 @@
 	<link rel="stylesheet" href="assets/css/main.css">
 	<link rel="stylesheet" href="assets/css/dag.css">
 
+	<!-- Vue MultiSelect CSS -->
+	<link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css">
+
+
 </head>
 
 <body>
@@ -59,8 +63,8 @@
 							</a>
 						</div>					
 					</div>
-					
 				</div>
+
 				<div class="config-menu-item">
 					<div id="merge-equivalent-config" class="custom-control custom-switch custom-control-right">
 						<input id="merge-equivalent-checkbox" class="custom-control-input" type="checkbox" v-model="settings.merge_equivalent_nodes">
@@ -73,6 +77,16 @@
 						<label for="show-clusters-checkbox" class="custom-control-label">{{ $t("message.group_by_language") }}</a></label>
 					</div>
 				</div>
+				<div class="config-menu-item">
+					<div id="filter-languages-config" class="custom-control custom-switch custom-control-right">
+						<input id="filter-languages-checkbox" class="custom-control-input" type="checkbox" v-model="settings.filter_languages">
+						<label for="filter-languages-checkbox" class="custom-control-label">Filter Languages</a></label>
+					</div>
+					<multiselect v-if="settings.filter_languages" v-model="graph_languages.selected" :show-labels="false" :allow-empty="true" :disabled="graph_languages.options.length === 0" :options="graph_languages.options" :multiple="true" :close-on-select="false" :show-no-results="false" :clear-on-select="true" :preserve-search="false" placeholder="Select language" label="name" track-by="name" :preselect-first="false">
+					  <template slot="selection" slot-scope="{ values, search, isOpen }"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span></template>
+					</multiselect>
+				</div>
+				
 				<div class="sidebar-footer">
 					<div class="sidebar-footer-item">
 						<a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">
@@ -119,14 +133,16 @@
 								<span aria-hidden="true">&times;</span>
 							</button>
 							</div>
+							<div class="modal-header">
+								<button type="button" class="btn btn-danger" data-dismiss="modal" v-on:click="removeNode">Remove Node</button>	
+								<button type="button" class="btn btn-primary" data-dismiss="modal" :disabled="modal_node_info.node_id.includes('-pro')" v-on:click="addDescendants">{{ $t('message.add_descendants') }}</button>	
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">{{ $t('message.close') }}</button>
+							</div>
 							<div v-html="modal_node_info.body" class="modal-body"></div>
 							<div v-if="modal_node_info.found" class="modal-footer">
 								This information has been extracted from <a :href="modal_node_info.wiktionary_link" target="_blank">English-language Wiktionary</a> and is under license <a href="https://en.wiktionary.org/wiki/Wiktionary:CC-BY-SA" target="_blank">CC-BY-SA</a>. 
 							</div>
-							<div class="modal-footer">
-								<button type="button" class="btn btn-primary" data-dismiss="modal" :disabled="modal_node_info.node_id.includes('-pro')" v-on:click="addDescendants">{{ $t('message.add_descendants') }}</button>	
-								<button type="button" class="btn btn-secondary" data-dismiss="modal">{{ $t('message.close') }}</button>
-							</div>
+							
 						</div>
 					</div>
 				</div>
@@ -154,6 +170,10 @@
 		integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
 		crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/gh/xcash/bootstrap-autocomplete@v2.3.7/dist/latest/bootstrap-autocomplete.min.js"></script>
+	
+	<!-- Vue MultiSelect JS -->
+	<script src="https://unpkg.com/vue-multiselect@2.1.0"></script>
+
 	<!-- JS assets -->
 	<script type="module" src="assets/js/main.js"></script>
 

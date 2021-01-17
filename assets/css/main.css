@@ -155,3 +155,17 @@ div.custom-control-right .custom-control-label::before {
   right: -2.35rem;
   left: auto;
 }
+
+div.multiselect {
+  margin-top: 0.75em
+}
+
+.multiselect__option--highlight {
+  background: indianred !important;
+  opacity: 75%;
+}
+
+.multiselect__tag {
+  background: indianred !important;
+  opacity: 75%;
+} 
