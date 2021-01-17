@@ -3,7 +3,7 @@ import {loadLanguageMap} from './data/load.js';
 const DAG_ELEMENT_ID = 'dag-panel'
 const MODAL_ELEMENT_ID = 'node-modal'
 const DEFAULT_SCALE = 1;
-const LANGUAGE_MAP = loadLanguageMap();
+export const LANGUAGE_MAP = loadLanguageMap();
 
 var g = resetDAG()
 var root_node = undefined;
@@ -134,6 +134,24 @@ export function addNode(data, add_cluster=true) {
     })
   });
 }
+
+export function removeNode(node_id, reconect_edges=true) {
+  if (g.nodes().includes(node_id)) {
+    if (reconect_edges) {
+      for (const predecesor_id of g.predecessors(node_id)) {
+        g.removeEdge(predecesor_id, node_id);
+        for (const successor_id of g.successors(node_id)) {
+          g.removeEdge(node_id, successor_id);
+          g.setEdge(predecesor_id, successor_id, {
+            curve: d3.curveBasis
+          })
+        }
+      } 
+    }      
+    g.removeNode(node_id);
+  }
+}
+
 
 export function zoomFitContent(){
   var svg = d3.select(`#${DAG_ELEMENT_ID}`), svgGroup = svg.select("g");
