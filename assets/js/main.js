@@ -22,6 +22,7 @@ var app = new Vue({
     modal_node_info : {
       'title': '',
       'wiktionary_link': '#',
+      'node_id': '',
       'body': '',
       'found': false,
       'uris': []
@@ -170,6 +171,7 @@ function drawDAG() {
       var error_message = i18n.t('message.info_not_available');
       app.modal_node_info.title = node['label'];
       app.modal_node_info.uris = node['uris'];
+      app.modal_node_info.node_id = node['id']
       var section = undefined;
       if(node.wiktionary_link === undefined) {
         // "Nos tiramos el triple" (Spanish expression for "Try a three-point shoot". Meaning: Give a try) 

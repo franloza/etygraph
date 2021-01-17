@@ -124,7 +124,7 @@
 								This information has been extracted from <a :href="modal_node_info.wiktionary_link" target="_blank">English-language Wiktionary</a> and is under license <a href="https://en.wiktionary.org/wiki/Wiktionary:CC-BY-SA" target="_blank">CC-BY-SA</a>. 
 							</div>
 							<div class="modal-footer">
-								<button type="button" class="btn btn-primary" data-dismiss="modal" v-on:click="addDescendants">{{ $t('message.add_descendants') }}</button>	
+								<button type="button" class="btn btn-primary" data-dismiss="modal" :disabled="modal_node_info.node_id.includes('-pro')" v-on:click="addDescendants">{{ $t('message.add_descendants') }}</button>	
 								<button type="button" class="btn btn-secondary" data-dismiss="modal">{{ $t('message.close') }}</button>
 							</div>
 						</div>
