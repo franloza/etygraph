@@ -1,6 +1,7 @@
 const BASE_URL = "etytree-virtuoso.wmflabs.org";
 const SPARQL_ENDOINT = "https://" + BASE_URL + '/sparql';
 const MAX_DEPTH = 10;
+const MAX_DESCENDANTS = 50;
 
 export function getAncestors(word, lang, on_add_node_callback, on_finish_callback, recursive = true, processed = undefined) {
   if (processed === undefined) {
@@ -200,7 +201,7 @@ export function getDescendants(uris, on_add_node_callback, on_finish_callback, p
     processed = [];
   } 
   var pending = [];
-  var result = {}
+  var result = {};
   for (const parent_uri of uris) {
     getDescendantsFromUri(parent_uri, function(data) {
       var descendant_uris = parseGetDescendantsFromUriResponse(data);
@@ -243,6 +244,7 @@ function getDescendantsFromUri(uri, callback) {
   SELECT DISTINCT ?descendant {    
     ?descendant dbetym:etymologicallyRelatedTo* <${uri}> .    
   }
+  LIMIT ${MAX_DESCENDANTS}
   `;
   sparqlQuery(query, function (data) {
     callback(data)
