@@ -169,7 +169,7 @@
 									<ol>
 										<li>
 											{{ $t('message.help_modal.getting_started.p3') }}
-											<button class="nav-button" type="button" id="menu-toggle" v-on:click="toggleMenu">
+											<button class="nav-button" type="button" id="menu-toggle-modal" v-on:click="toggleMenu">
 												<div class="icon"><span class="nav-button-fa fas fa-cog"></span></div>
 											</button>
 										</li>
@@ -179,7 +179,7 @@
 										<li>
 											{{ $t('message.help_modal.getting_started.p5') }}	
 											<nav class="navbar navbar-light bg-light w-50" id="search-bar-nav">
-												<input id="query-input" v-model="query" class="form-control advancedAutoComplete mr-sm-2" type="text" autocomplete="on" :placeholder="[[ $t('message.search') ]]" aria-label="Search" v-on:keyup.enter="searchWord">
+												<input id="query-input-modal" v-model="query" class="form-control advancedAutoComplete mr-sm-2" type="text" autocomplete="on" :placeholder="[[ $t('message.search') ]]" aria-label="Search" v-on:keyup.enter="searchWord">
 												<button class="nav-button" type="button" id="search-submit" v-on:click="searchWord">
 													<span class="nav-button-fa fas fa-search"></span>
 												</button>
@@ -195,10 +195,10 @@
 											</button>
 										</li>
 										<li>
-											{{ $t('message.help_modal.getting_started.p8') }}<button class="nav-button" type="button" id="zoom-to-root" v-on:click="zoomToRootNode">
+											{{ $t('message.help_modal.getting_started.p8') }}<button class="nav-button" type="button" id="zoom-to-root-modal" v-on:click="zoomToRootNode">
 												<div class="icon"><span class="nav-button-fa fa fa-compress"></span></div>
 											</button> {{ $t('message.help_modal.getting_started.p9') }}
-											<button class="nav-button" type="button" id="zoom-fit-content" v-on:click="zoomFitContent">
+											<button class="nav-button" type="button" id="zoom-fit-content-modal" v-on:click="zoomFitContent">
 												<div class="icon"><span class="nav-button-fa fas fa-expand-arrows-alt"></span></div>
 											</button>
 										</li>
