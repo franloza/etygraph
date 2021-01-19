@@ -44,6 +44,7 @@ var app = new Vue({
     loading: false,
     locale_data: locale_data,
     locale: 'en',
+    show_help: false
   },
   mounted() {
     if (localStorage.locale) {
@@ -58,6 +59,13 @@ var app = new Vue({
         ...this.settings,
         ...JSON.parse(localStorage.settings)
       };
+    } 
+    if (localStorage.first_visit === undefined) {
+      this.show_help = true;
+      localStorage.first_visit = false;
+    } 
+    else {
+      this.show_help = false;
     }
   },
   watch: {
@@ -301,7 +309,10 @@ $(document).ready(function () {
       app.query = item;
       searchWord(evt)
   });
-  
+
+  if (app.show_help) {
+    $('#help-modal').modal('show')
+  }
 });
 
 

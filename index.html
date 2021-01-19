@@ -116,15 +116,18 @@
 					<button class="nav-button" type="button" id="zoom-fit-content" v-on:click="zoomFitContent">
 						<div class="icon"><span class="nav-button-fa fas fa-expand-arrows-alt"></span></div>
 					</button>
+					<button class="nav-button" type="button" id="help" data-toggle="modal" data-target="#help-modal">
+						<div class="icon"><span class="nav-button-fa fas fa-question-circle"></span></div>
+					</button>	
 					<nav class="navbar mr-auto bg-light" id="search-bar-nav">
 						<input id="query-input" v-model="query" class="form-control advancedAutoComplete" type="text" autocomplete="on" :placeholder="[[ $t('message.search') ]]" aria-label="Search" v-on:keyup.enter="searchWord">
 						<button class="nav-button" type="button" id="search-submit" v-on:click="searchWord">
 							<span class="nav-button-fa fas fa-search"></span>
 						</button>
-					</nav>			
+					</nav>		
 				</nav>
-				<!-- Modal -->
-				<div class="modal fade" id="node-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+				<!-- Node Modal -->
+				<div class="modal fade" id="node-modal" tabindex="-1" role="dialog" aria-labelledby="nodeModal" aria-hidden="true">
 					<div class="modal-dialog modal-xl" role="document">
 						<div class="modal-content">
 							<div class="modal-header">
@@ -146,10 +149,109 @@
 						</div>
 					</div>
 				</div>
+				<!-- Help Modal -->
+				<div class="modal fade" id="help-modal" tabindex="-2" role="dialog" aria-labelledby="helpModal" aria-hidden="true">
+					<div class="modal-dialog modal-xl" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+							<h5 class="modal-title" id="node-modal-title">{{ $t('message.help') }}</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							</div>
+							<div class="modal-body">
+								<h4>{{ $t('message.help_modal.getting_started.title') }}</h4>
+								<p>
+									{{ $t('message.help_modal.getting_started.p1') }}
+								</p>
+								<p>
+									{{ $t('message.help_modal.getting_started.p2') }}
+									<ol>
+										<li>
+											{{ $t('message.help_modal.getting_started.p3') }}
+											<button class="nav-button" type="button" id="menu-toggle-modal" v-on:click="toggleMenu">
+												<div class="icon"><span class="nav-button-fa fas fa-cog"></span></div>
+											</button>
+										</li>
+										<li>
+											{{ $t('message.help_modal.getting_started.p4') }}							
+										</li>
+										<li>
+											{{ $t('message.help_modal.getting_started.p5') }}	
+											<nav class="navbar navbar-light bg-light w-50" id="search-bar-nav">
+												<input id="query-input-modal" v-model="query" class="form-control advancedAutoComplete mr-sm-2" type="text" autocomplete="on" :placeholder="[[ $t('message.search') ]]" aria-label="Search" v-on:keyup.enter="searchWord">
+												<button class="nav-button" type="button" id="search-submit" v-on:click="searchWord">
+													<span class="nav-button-fa fas fa-search"></span>
+												</button>
+											</nav>
+										</li>
+										<li>
+											{{ $t('message.help_modal.getting_started.p6') }}	
+										</li>
+										<li>
+											{{ $t('message.help_modal.getting_started.p7') }}	
+											<button class="nav-button" type="button" id="clear-dag" v-on:click="clear">
+												<div class="icon"><span class="nav-button-fa fas fa-eraser"></span></div>
+											</button>
+										</li>
+										<li>
+											{{ $t('message.help_modal.getting_started.p8') }}<button class="nav-button" type="button" id="zoom-to-root-modal" v-on:click="zoomToRootNode">
+												<div class="icon"><span class="nav-button-fa fa fa-compress"></span></div>
+											</button> {{ $t('message.help_modal.getting_started.p9') }}
+											<button class="nav-button" type="button" id="zoom-fit-content-modal" v-on:click="zoomFitContent">
+												<div class="icon"><span class="nav-button-fa fas fa-expand-arrows-alt"></span></div>
+											</button>
+										</li>
+									</ol>
+								</p>
+								<p>
+								<h4>FAQ</h4>
+								<p>
+									<h5>
+										<a data-toggle="collapse" href="#faq-answer-1" aria-expanded="false" aria-controls="faqAnswer1">
+											{{ $t('message.help_modal.faq.q1') }}
+										</a>
+									</h5>
+								</p>
+								<div class="collapse" id="faq-answer-1">
+									<div class="card card-body">
+										{{ $t('message.help_modal.faq.a1') }}									</div>
+								</div>
+								<p>
+									<h5>
+										<a data-toggle="collapse" href="#faq-answer-2" aria-expanded="false" aria-controls="faqAnswer1">
+											{{ $t('message.help_modal.faq.q2') }}										</a>
+									</h5>
+								</p>
+								<div class="collapse" id="faq-answer-2">
+									<div class="card card-body">
+										{{ $t('message.help_modal.faq.a2') }} <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/3.0/80x15.png" /></a>								
+									</div>
+								</div>
+								<p>
+									<h5>
+										<a data-toggle="collapse" href="#faq-answer-3" aria-expanded="false" aria-controls="faqAnswer1">
+											{{ $t('message.help_modal.faq.q3') }}
+										</a>
+									</h5>
+								</p>
+								<div class="collapse" id="faq-answer-3">
+									<div class="card card-body">
+										{{ $t('message.help_modal.faq.a3') }} <a href="https://github.com/franloza/etygraph"> <i class="fa fa-lg fab fa-github"></i></a>							
+									</div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">{{ $t('message.close') }}</button>
+							</div>
+							
+						</div>
+					</div>
+				</div>
 				<div v-if="loading" id="loading-spinner">
 					<div id="loading-spinner-outer" class="d-flex justify-content-md-center">
 						<div id="loading-spinner-inner" class="spinner-border text-secondary" role="status">
-							<span class="sr-only">Loading...</span>
+							<span class="sr-only">{{ $t('message.loading') }}...</span>
 						</div>
 					</div>
 				</div>				

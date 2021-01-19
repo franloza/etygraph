@@ -19,7 +19,30 @@ const messages = {
             close: 'Close',
             add_descendants: 'Add descendants',
             remove_node: 'Remove word',
-            select_language: 'Select Language'
+            select_language: 'Select Language',
+            help: 'Help',
+            help_modal: {
+                getting_started: {
+                    title: "Getting started",
+                    p1: "Welcome to Etygraph, the online tool that intends to teach the origin of words.",
+                    p2: "To start using the application you can follow the following steps:",
+                    p3: "Open the side menu (if it is not already open) by selecting the settings icon on the top bar:",
+                    p4: "Select the word's language.",
+                    p5: "Search for the word in the search box on the top bar:",
+                    p6: "Click on the node to get more information or see the word's descendants. You can also delete the nodes you don't want to see in the display.",
+                    p7: "You can clear the display and start over by selecting the eraser icon: ",
+                    p8: "You can center the view on the last searched node with ",
+                    p9: "and zoom out to see the entire display with "
+                },
+                faq: {
+                    q1: "Can I add words from different languages?",
+                    a1: "Yes, you can. All you have to do is add a word from one language, change the language in the side menu and perform a new search.",
+                    q2: "Can I use this content in a publication or educational material?",
+                    a2: "Yes, just cite this website and link to it. Please note that if you include any visualization obtained with this tool in your publication, you will have to distribute your contributions under the same BY-SA license. You can get more information about the license here:",
+                    q3: "How can I report a bug in the tool?",
+                    a3: "The data is obtained from a public database, so it may contain bugs and wrong connections. However, if you think the bug has occurred in the application, you can report it by creating an 'issue' in the tool's Github repository:"
+                }
+            }
         }
     },
     es: {
@@ -42,7 +65,30 @@ const messages = {
             close: 'Cerrar',
             add_descendants: 'Añadir descendientes',
             remove_node: 'Eliminar palabra',
-            select_language: 'Seleccionar idioma'
+            select_language: 'Seleccionar idioma',
+            help: 'Ayuda',
+            help_modal: {
+                getting_started: {
+                    title: "Para empezar",
+                    p1: "Bienvenido a Etygraph, la herramienta digital que trata de enseñar el origen de las palabras.",
+                    p2: "Para comenzar a usar la aplicación puedes seguir lo siguientes pasos:",
+                    p3: "Abre el menú lateral (si no está abierto ya) selecciónando el icono de ajustes situado en la barra superior:",
+                    p4: "Selecciona el idioma de la palabra.",
+                    p5: "Busca la palabra en el cuadro de búsqueda situado en la barra superior:",
+                    p6: "Clica sobre el nodo para obtener mas información o ver los descendientes de la palabra. También puedes eliminar los nodos que no quieres ver en la visualización.",
+                    p7: "Puedes borrar la visualización y empezar de nuevo selecciónando el icono del borrador:",
+                    p8: "Puedes centrar la vista en el último nodo buscado con ",
+                    p9: "y alejar el zoom para ver la visualización completa con "
+                },
+                faq: {
+                    q1: "¿Puedo añadir palabras de diferentes idiomas?",
+                    a1: "Si, si que puedes. Lo único que tienes que hacer es añadir una palabra de un idioma, cambiar el idioma en el menú lateral y realizar una nueva búsqueda.",
+                    q2: "¿Puedo usar este contenido en una publicación o material educativo?",
+                    a2: "Si, tan solo tienes que citar esta página web y enlazar a esta página. Ten en cuenta que si incluyes alguna visualización obtenida con esta herramienta en tu publicación, tendrás que distribuir tus contribuciones bajo la misma licencia BY-SA. Puedes obtener mas información sobre la licencia aquí:",
+                    q3: "¿Cómo puedo reportar un fallo en la herramienta?",
+                    a3: "Los datos se obtienen de una base de datos pública, por lo que pueden contener fallos y conexiones erróneas. No obstante, si crees que el fallo se ha producido en la aplicación, puedes reportarlo creando un 'issue' en el repositorio de Github de la herramienta:"
+                }
+            }
         }
     },
     fr: {
