@@ -88,13 +88,14 @@ function _getAncestors(uri, on_add_node_callback, on_finish_callback, recursive,
       on_finish_callback(result, getId(url))
     }
   }
-  if (!processed.includes(uri) && !pending.includes(uri)) {
-    pending.push(uri);
-    describeUri(uri, function (data) {
-      describeUriCallback(uri, data)
-        describeUriCallback(uri, data)
+  [uri, getSecondaryUri(uri)].forEach(function (element, i) {
+    if (!processed.includes(element) && !pending.includes(element)) {
+      pending.push(element);
+      describeUri(element, function (data) {
+        describeUriCallback(element, data)
       });
     }
+  });  
 }
 
 export function mergeEquivalentNodes(graph) {
