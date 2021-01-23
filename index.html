@@ -78,6 +78,12 @@
 					</div>
 				</div>
 				<div class="config-menu-item">
+					<div id="extended-search-config" class="custom-control custom-switch custom-control-right">
+						<input id="extended-search-checkbox" class="custom-control-input" type="checkbox" v-model="settings.extended_search">
+						<label for="extended-search-checkbox" class="custom-control-label">{{ $t("message.extended_search") }}</a></label>
+					</div>
+				</div>
+				<div class="config-menu-item">
 					<div id="filter-languages-config" class="custom-control custom-switch custom-control-right">
 						<input id="filter-languages-checkbox" class="custom-control-input" type="checkbox" v-model="settings.filter_languages">
 						<label for="filter-languages-checkbox" class="custom-control-label">{{ $t("message.filter_by_language") }}</a></label>

@@ -132,13 +132,15 @@ export function addNode(data, add_cluster=true) {
 
 export function addEdges(data) {
   g.nodes().forEach(node_id => {
-    data[node_id].relative_ids.forEach(relative_node => {
-      if (g.nodes().includes(relative_node)) {
-        g.setEdge(relative_node, node_id, {
-          curve: d3.curveBasis
-        })
-      }  
-    });
+    if (data[node_id] !== undefined) {
+      data[node_id].relative_ids.forEach(relative_node => {
+        if (g.nodes().includes(relative_node)) {
+          g.setEdge(relative_node, node_id, {
+            curve: d3.curveBasis
+          })
+        }
+      });
+    }
   });
 }
 

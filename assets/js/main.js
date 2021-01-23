@@ -24,7 +24,8 @@ var app = new Vue({
     settings: {
       'merge_equivalent_nodes': true,
       'show_clusters': true,
-      'filter_languages': false
+      'filter_languages': false,
+      'extended_search': true
     },
     modal_node_info : {
       'title': '',
@@ -82,7 +83,6 @@ var app = new Vue({
     "settings.show_clusters": redrawDAG,
     "settings.filter_languages": redrawDAG,
     "graph_languages.selected": redrawDAG,
-
   },
   methods: {
     changeLocale: function (locale) {
@@ -143,6 +143,7 @@ function searchWord(){
           app.loading = false;
           Vue.nextTick(drawDAG);
         },
+        app.settings.extended_search,
         true,
         app.uri_cache
       );

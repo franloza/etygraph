@@ -3,7 +3,7 @@ const SPARQL_ENDOINT = "https://" + BASE_URL + '/sparql';
 const MAX_DEPTH = 10;
 const MAX_DESCENDANTS = 50;
 
-export function getAncestors(word, lang, on_add_node_callback, on_finish_callback, recursive = true, processed = undefined) {
+export function getAncestors(word, lang, on_add_node_callback, on_finish_callback, extended_search = true, recursive = true, processed = undefined) {
   if (processed === undefined) {
     processed = [];
   }  
@@ -15,7 +15,7 @@ export function getAncestors(word, lang, on_add_node_callback, on_finish_callbac
   if (processed.includes(word_uri)) {
     on_finish_callback(result, getId(word_uri));
   }
-  _getAncestors(word_uri, on_add_node_callback, on_finish_callback, recursive, 1, processed, result, pending);
+  _getAncestors(word_uri, on_add_node_callback, on_finish_callback, recursive, 1, processed, result, pending, extended_search);
 }
 
 function getId(uri) {
@@ -54,7 +54,8 @@ export function mergeNode(node_a, node_b) {
 }
 
 
-function _getAncestors(uri, on_add_node_callback, on_finish_callback, recursive, depth, processed, result, pending) {
+function _getAncestors(uri, on_add_node_callback, on_finish_callback, recursive, depth, processed, result, pending,
+  extended_search) {
   function describeUriCallback (url, data) {
     pending.pop();
     var parsed = parseDescribeUriResponse(data);
@@ -74,12 +75,12 @@ function _getAncestors(uri, on_add_node_callback, on_finish_callback, recursive,
       if (recursive && depth < MAX_DEPTH) {
         parsed.relative_uris.forEach(element => {
           if (!processed.includes(element)) {
-            _getAncestors(element, on_add_node_callback, on_finish_callback, recursive, depth+1, processed, result, pending)
+            _getAncestors(element, on_add_node_callback, on_finish_callback, recursive, depth+1, processed, result, pending, extended_search)
           }
         });
         parsed.equivalent_uris.forEach(element => {
           if (!processed.includes(element)) {
-            _getAncestors(element, on_add_node_callback, on_finish_callback, recursive, depth, processed, result, pending)
+            _getAncestors(element, on_add_node_callback, on_finish_callback, recursive, depth, processed, result, pending, extended_search)
           }
         });        
       }
@@ -88,12 +89,18 @@ function _getAncestors(uri, on_add_node_callback, on_finish_callback, recursive,
       on_finish_callback(result, getId(url))
     }
   }
-  if (!processed.includes(uri) && !pending.includes(uri)) {
-    pending.push(uri);
-    describeUri(uri, function (data) {
-      describeUriCallback(uri, data)
+  var uris_to_search = [uri];
+  if (extended_search) {
+    uris_to_search.push(getSecondaryUri(uri));
+  }
+  uris_to_search.forEach(function (element, i) {
+    if (!processed.includes(element) && !pending.includes(element)) {
+      pending.push(element);
+      describeUri(element, function (data) {
+        describeUriCallback(element, data)
       });
     }
+  })
 }
 
 export function mergeEquivalentNodes(graph) {
