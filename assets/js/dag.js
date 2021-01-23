@@ -128,10 +128,17 @@ export function addNode(data, add_cluster=true) {
     g.setNode(language_name, {label: language_name, clusterLabelPos: 'top', style: 'fill: #d3d7e8'});
     g.setParent(data.id, language_name);
   }
-  data.relative_ids.forEach(element => {
-    g.setEdge(element, data.id, {
-      curve: d3.curveBasis
-    })
+}
+
+export function addEdges(data) {
+  g.nodes().forEach(node_id => {
+    data[node_id].relative_ids.forEach(relative_node => {
+      if (g.nodes().includes(relative_node)) {
+        g.setEdge(relative_node, node_id, {
+          curve: d3.curveBasis
+        })
+      }  
+    });
   });
 }
 

@@ -1,7 +1,7 @@
 import {i18n, locale_data} from './i18n.js';
 import {getAncestors,getDescendants, getWords, mergeEquivalentNodes} from './api/etytree.js';
 import {getPageFromURL, getHTMLContentFromPage} from './api/wiktionary.js';
-import {clearDAG, renderDAG, addNode, removeNode, zoomFitContent, zoomToRootNode, DAGisRendered, LANGUAGE_MAP} from './dag.js';
+import {clearDAG, renderDAG, addNode, removeNode, zoomFitContent, zoomToRootNode, DAGisRendered, LANGUAGE_MAP, addEdges} from './dag.js';
 
 
 var multiselect = Vue.component('vue-multiselect', window.VueMultiselect.default)
@@ -210,6 +210,7 @@ function drawDAG() {
       }
       addNode(node, show_clusters);
     });
+    addEdges(graph);
     app.removed_nodes.forEach(node_id => { 
         removeNode(node_id);
     });
