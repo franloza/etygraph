@@ -166,11 +166,15 @@ export function zoomFitContent(){
 }
 
 export function zoomToRootNode(){
+  if (root_node !== undefined) {
   var svg = d3.select(`#${DAG_ELEMENT_ID}`), svgGroup = svg.select("g");
   var svg_rect = document.getElementById(DAG_ELEMENT_ID).getBoundingClientRect();
   var zoom = getZoom(svgGroup);
   svg.call(zoom);
   zoom.transform(svg, d3.zoomIdentity.scale(1));
   zoom.scaleBy(svg, DEFAULT_SCALE);
-  zoom.translateBy(svg, svg_rect.width*DEFAULT_SCALE/2 - g.node(root_node).x, (svg_rect.height*DEFAULT_SCALE/2)-g.node(root_node).y); 
+    var x = g.node(root_node) === undefined ? 0 : g.node(root_node).x;
+    var y = g.node(root_node) === undefined ? 0 : g.node(root_node).y;
+    zoom.translateBy(svg, svg_rect.width*DEFAULT_SCALE/2 - x, (svg_rect.height*DEFAULT_SCALE/2)-y);
+}
 }
