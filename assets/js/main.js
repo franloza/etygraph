@@ -193,7 +193,7 @@ function drawDAG() {
     var selected_langs = app.graph_languages.selected.map(function(elem) {return elem.id});
     var filter_languages = (selected_langs.length > 0) && (app.settings.filter_languages);
     Object.values(graph).forEach(node => {
-      node.is_queried = (app.query_node_ids.has(node.id));
+      node.is_queried = new Set([...app.query_node_ids].filter(x => node.merge_ids.has(x))).size > 0;
       if (lang_to_node[node.lang] === undefined) {
         lang_to_node[node.lang] = [node.id];
       } else {

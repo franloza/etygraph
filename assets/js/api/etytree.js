@@ -45,8 +45,9 @@ export function mergeNode(node_a, node_b) {
   node_a.relative_uris = new Set([...node_a.relative_uris, ...node_b.relative_uris]);
   node_a.equivalent_ids = new Set([...node_a.equivalent_ids, ...node_b.equivalent_ids]);
   node_a.equivalent_uris = new Set([...node_a.equivalent_uris, ...node_b.equivalent_uris]);
-  node_a.links == new Set([...node_a.links, ...node_b.links]);
-  node_a.uris == new Set([...node_a.uris, ...node_b.uris]);
+  node_a.links = new Set([...node_a.links, ...node_b.links]);
+  node_a.uris = new Set([...node_a.uris, ...node_b.uris]);
+  node_a.merge_ids = new Set([...node_a.merge_ids, ...node_b.merge_ids]);
   if (node_a.wiktionary_link == undefined) {
     node_a.wiktionary_link = node_b.wiktionary_link;
   }
@@ -297,7 +298,7 @@ function parseGetDescendantsFromUriResponse(raw) {
 function parseDescribeUriResponse(raw) {
   for (const [uri, fields] of Object.entries(raw)) {
     var id =  getId(uri);
-    var node = {id:id, relative_ids: new Set(), relative_uris: new Set(), equivalent_ids: new Set(), equivalent_uris: new Set(), links: new Set(), uris: new Set()};
+    var node = {id:id, relative_ids: new Set(), relative_uris: new Set(), equivalent_ids: new Set(), equivalent_uris: new Set(), links: new Set(), uris: new Set(), merge_ids: new Set([id])};
     node.uris.add(uri);
     for (const [field_id, field_data] of Object.entries(fields)) {
       if (field_id.includes('#label')) {
