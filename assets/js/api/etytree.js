@@ -94,7 +94,6 @@ function _getAncestors(uri, on_add_node_callback, on_finish_callback, recursive,
       describeUriCallback(uri, data)
       });
     }
-  });  
 }
 
 export function mergeEquivalentNodes(graph) {
