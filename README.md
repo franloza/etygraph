@@ -1,5 +1,7 @@
 # etygraph
 [![Netlify Status](https://api.netlify.com/api/v1/badges/608a6735-59f3-45d1-abfb-f78914ea8585/deploy-status)](https://app.netlify.com/sites/etygraph/deploys)
+![License](https://img.shields.io/github/license/franloza/etygraph)
+![GitHub manifest version](https://img.shields.io/github/manifest-json/v/franloza/etygraph)
 
 Discover the origin of the words. Try it in [https://etygraph.netlify.app](https://etygraph.netlify.app/)
 

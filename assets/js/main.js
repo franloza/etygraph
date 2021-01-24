@@ -13,6 +13,7 @@ var app = new Vue({
   },
   data: {
     // Default variables
+    app_version: "1.0.0",
     query: '',
     graph: {
       raw: {},
