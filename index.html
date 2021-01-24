@@ -125,6 +125,9 @@
 					<button class="nav-button" type="button" id="help" data-toggle="modal" data-target="#help-modal">
 						<div class="icon"><span class="nav-button-fa fas fa-question-circle"></span></div>
 					</button>	
+					<button class="nav-button" type="button" id="random-word" v-on:click="searchRandomWord">
+						<div class="icon"><span class="nav-button-fa fas fa-random"></span></div>
+					</button>
 					<nav class="navbar mr-auto bg-light" id="search-bar-nav">
 						<input id="query-input" v-model="query" class="form-control advancedAutoComplete" type="text" autocomplete="on" :placeholder="[[ $t('message.search') ]]" aria-label="Search" v-on:keyup.enter="searchWord">
 						<button class="nav-button" type="button" id="search-submit" v-on:click="searchWord">
@@ -196,7 +199,7 @@
 										</li>
 										<li>
 											{{ $t('message.help_modal.getting_started.p7') }}	
-											<button class="nav-button" type="button" id="clear-dag" v-on:click="clear">
+											<button class="nav-button" type="button" id="clear-dag-modal" v-on:click="clear">
 												<div class="icon"><span class="nav-button-fa fas fa-eraser"></span></div>
 											</button>
 										</li>
@@ -206,6 +209,12 @@
 											</button> {{ $t('message.help_modal.getting_started.p9') }}
 											<button class="nav-button" type="button" id="zoom-fit-content-modal" v-on:click="zoomFitContent">
 												<div class="icon"><span class="nav-button-fa fas fa-expand-arrows-alt"></span></div>
+											</button>
+										</li>
+										<li>
+											{{ $t('message.help_modal.getting_started.p10') }}	
+											<button class="nav-button" type="button" id="random-word-modal"  v-on:click="searchRandomWord">
+												<div class="icon"><span class="nav-button-fa fas fa-random"></span></div>
 											</button>
 										</li>
 									</ol>

@@ -1,5 +1,5 @@
 import {i18n, locale_data} from './i18n.js';
-import {getAncestors,getDescendants, getWords, mergeEquivalentNodes} from './api/etytree.js';
+import {getAncestors,getDescendants, getWords, getRandomWord, mergeEquivalentNodes} from './api/etytree.js';
 import {getPageFromURL, getHTMLContentFromPage} from './api/wiktionary.js';
 import {clearDAG, renderDAG, addNode, removeNode, zoomFitContent, zoomToRootNode, DAGisRendered, LANGUAGE_MAP, addEdges} from './dag.js';
 
@@ -93,6 +93,7 @@ var app = new Vue({
       }   
     },
     searchWord,
+    searchRandomWord,
     toggleMenu: function () {
       this.menu_toggled = !this.menu_toggled
     },
@@ -113,6 +114,27 @@ var app = new Vue({
     }
   }
 }).$mount('#app')
+
+
+function searchRandomWord(){
+  app.loading = true;
+  getRandomWord(
+    app.locale_data[app.locale].lang, 
+    function(data) {
+      try {
+        app.query = data[0].word;
+        searchWord();
+      }
+      catch {
+        app.loading = false;
+      }    
+    },
+    function (error) {
+      app.loading = false;
+    }
+  )
+}
+
 
 function searchWord(){
   app.loading = true;

@@ -29,11 +29,12 @@ const messages = {
                     p2: "To start using the application you can follow the following steps:",
                     p3: "Open the side menu (if it is not already open) by selecting the settings icon on the top bar:",
                     p4: "Select the word's language.",
-                    p5: "Search for the word in the search box on the top bar:",
+                    p5: "Search for the word (Including accents) in the search box on the top bar:",
                     p6: "Click on the node to get more information or see the word's descendants. You can also delete the nodes you don't want to see in the display.",
                     p7: "You can clear the display and start over by selecting the eraser icon: ",
                     p8: "You can center the view on the last searched node with ",
-                    p9: "and zoom out to see the entire display with "
+                    p9: "and zoom out to see the entire display with ",
+                    p10: "If you don't have any words in mind or just want to explore, press this button: "
                 },
                 faq: {
                     q1: "Can I add words from different languages?",
@@ -76,11 +77,12 @@ const messages = {
                     p2: "Para comenzar a usar la aplicación puedes seguir lo siguientes pasos:",
                     p3: "Abre el menú lateral (si no está abierto ya) selecciónando el icono de ajustes situado en la barra superior:",
                     p4: "Selecciona el idioma de la palabra.",
-                    p5: "Busca la palabra en el cuadro de búsqueda situado en la barra superior:",
+                    p5: "Busca la palabra (acentos incluidos) en el cuadro de búsqueda situado en la barra superior:",
                     p6: "Clica sobre el nodo para obtener mas información o ver los descendientes de la palabra. También puedes eliminar los nodos que no quieres ver en la visualización.",
                     p7: "Puedes borrar la visualización y empezar de nuevo selecciónando el icono del borrador:",
                     p8: "Puedes centrar la vista en el último nodo buscado con ",
-                    p9: "y alejar el zoom para ver la visualización completa con "
+                    p9: "y alejar el zoom para ver la visualización completa con ",
+                    p10: "Si no tienes ninguna palabra en mente o simplemente quieres explorar, presiona este botón: "
                 },
                 faq: {
                     q1: "¿Puedo añadir palabras de diferentes idiomas?",

@@ -202,6 +202,30 @@ export function getWords(word, lang, callback) {
   });
 }
 
+export function getRandomWord(lang, callback, err_callback=undefined){
+  var query = `
+    SELECT DISTINCT (STR($label) as $label) ?ee
+        WHERE {     ?iri rdfs:label ?label . 
+                    FILTER regex(?label, "^[a-z].*")
+                    FILTER ( 1 >  <SHORT_OR_LONG::bif:rnd> (1000, $label, ?ee) )
+                    FILTER (!isBlank(?ee)) .
+                    FILTER (lang(?label) = '${lang}')
+          OPTIONAL {        
+            ?iri dbnary:describes ?ee . 
+            ?ee rdf:type dbetym:EtymologyEntry .    
+          }
+        } LIMIT 1
+    `
+  sparqlQuery(query, 
+    function (data) {
+      callback(data.results.bindings.map(x => {
+        return {word: x.label.value, uri: x.ee.value}
+      }));
+    },
+    err_callback
+    );
+}
+
 export function getDescendants(uris, on_add_node_callback, on_finish_callback, processed=undefined) {
   if (processed === undefined) {
     processed = [];
@@ -268,7 +292,7 @@ function describeUri(uri, callback) {
 }
 
 
-function sparqlQuery(query, callback) {
+function sparqlQuery(query, callback, err_callback=undefined) {
   axios.get(SPARQL_ENDOINT, {
     params: {
       query: query,
@@ -283,7 +307,11 @@ function sparqlQuery(query, callback) {
     callback(data)
   })
   .catch(function (error) {
-    console.log(error);
+    if (err_callback !== undefined) {
+      err_callback(error);
+    } else {
+      console.log(error);
+    }   
   });  
 }
 
