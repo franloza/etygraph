@@ -13,7 +13,7 @@ var app = new Vue({
   },
   data: {
     // Default variables
-    app_version: "1.0.0",
+    app_version: "1.1.0",
     query: '',
     graph: {
       raw: {},
@@ -144,19 +144,22 @@ function searchWord(){
     var query_node_id = undefined;
     try {
       getAncestors(
-        app.query.toLowerCase(), 
+        app.query, 
         app.locale_data[app.locale].lang, 
         function(node) {
           if (query_node_id === undefined) {
             app.query_node_ids.add(node.id);
             query_node_id = node.id;
-          }
+          } 
           if (app.graph.raw === undefined) {
             app.graph.raw = {};
-          }
+          }; 
           app.graph.raw[node.id] = node;
         },
         function(graph, last_node_id){
+          if (app.graph.raw === undefined) {
+            app.graph.raw = {};
+          };
           if ((Object.keys(graph).length == 0) && app.graph.raw[last_node_id] !== undefined) {
             // The query was already in the graph
             app.query_node_ids.add(last_node_id);
@@ -323,8 +326,11 @@ $(document).ready(function () {
     noResultsText: i18n.t('message.no_results'),
     events: {
         search: function (qry, callback) {
+            var locale_data = app.locale_data[app.locale];
+            var qry = qry.replace(/´/g, '')
             if (qry.trim().split(' ')[0].length >= 4) {
-              getWords(qry.toLowerCase(), app.locale_data[app.locale].lang, function(data) {
+              getWords(qry.toLowerCase(),  
+                locale_data.label_lang === undefined ? locale_data.lang : locale_data.label_lang, function(data) {
                 callback(data.map(x => {return x.word}));
               });
           }
