@@ -12,10 +12,11 @@ export function getAncestors(word, lang, on_add_node_callback, on_finish_callbac
   var clean_word = word.trim().replace(' ', '_');
   var word_uri = `http://${BASE_URL}/dbnary/eng/${prefix}__ee_1_${clean_word}`;
   var pending = []; 
+  var uris_searched = [];
   if (processed.includes(word_uri)) {
-    on_finish_callback(result, getId(word_uri));
+    on_finish_callback(result, getId(word_uri), false);
   }
-  _getAncestors(word_uri, on_add_node_callback, on_finish_callback, recursive, 1, processed, result, pending, extended_search);
+  _getAncestors(word_uri, on_add_node_callback, on_finish_callback, recursive, 1, processed, result, pending, extended_search, uris_searched);
 }
 
 function getId(uri) {
@@ -56,8 +57,9 @@ export function mergeNode(node_a, node_b) {
 
 
 function _getAncestors(uri, on_add_node_callback, on_finish_callback, recursive, depth, processed, result, pending,
-  extended_search) {
+  extended_search, uris_searched) {
   function describeUriCallback (url, data) {
+    uris_searched.push(url);
     pending.pop();
     var parsed = parseDescribeUriResponse(data);
 
@@ -76,18 +78,18 @@ function _getAncestors(uri, on_add_node_callback, on_finish_callback, recursive,
       if (recursive && depth < MAX_DEPTH) {
         parsed.relative_uris.forEach(element => {
           if (!processed.includes(element)) {
-            _getAncestors(element, on_add_node_callback, on_finish_callback, recursive, depth+1, processed, result, pending, extended_search)
+            _getAncestors(element, on_add_node_callback, on_finish_callback, recursive, depth+1, processed, result, pending, extended_search, uris_searched)
           }
         });
         parsed.equivalent_uris.forEach(element => {
           if (!processed.includes(element)) {
-            _getAncestors(element, on_add_node_callback, on_finish_callback, recursive, depth, processed, result, pending, extended_search)
+            _getAncestors(element, on_add_node_callback, on_finish_callback, recursive, depth, processed, result, pending, extended_search, uris_searched)
           }
         });        
       }
     }
     if (pending.length == 0) {
-      on_finish_callback(result, getId(url))
+      on_finish_callback(result, getId(url), uris_searched.length == (extended_search ? 2 : 1))
     }
   }
   var uris_to_search = [uri];
