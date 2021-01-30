@@ -144,19 +144,22 @@ function searchWord(){
     var query_node_id = undefined;
     try {
       getAncestors(
-        app.query.toLowerCase(), 
+        app.query, 
         app.locale_data[app.locale].lang, 
         function(node) {
           if (query_node_id === undefined) {
             app.query_node_ids.add(node.id);
             query_node_id = node.id;
-          }
+          } 
           if (app.graph.raw === undefined) {
             app.graph.raw = {};
-          }
+          }; 
           app.graph.raw[node.id] = node;
         },
         function(graph, last_node_id){
+          if (app.graph.raw === undefined) {
+            app.graph.raw = {};
+          };
           if ((Object.keys(graph).length == 0) && app.graph.raw[last_node_id] !== undefined) {
             // The query was already in the graph
             app.query_node_ids.add(last_node_id);
