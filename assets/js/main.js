@@ -325,7 +325,7 @@ $(document).ready(function () {
         search: function (qry, callback) {
             if (qry.trim().split(' ')[0].length >= 4) {
               getWords(qry.toLowerCase(), app.locale_data[app.locale].lang, function(data) {
-                callback([...new Set(data.map(x => {return x.word}))]);
+                callback(data.map(x => {return x.word}));
               });
           }
         },

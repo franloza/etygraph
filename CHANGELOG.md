@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
  
 ### Changed
+- Improved auto-complete query to obtain more entries with connections
  
 ### Fixed
 - Removed duplicates from auto-complete

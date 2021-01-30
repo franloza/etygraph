@@ -184,20 +184,21 @@ export function mergeEquivalentNodes(graph) {
 export function getWords(word, lang, callback) {
   word = word.split(' ')[0];
   var query = `
-    SELECT DISTINCT (STR($label) as $label) ?ee 
+    SELECT DISTINCT (STR($label) as $label)
     WHERE {     ?iri rdfs:label ?label .   
                 ?label bif:contains "'${word}*'" .    
                 FILTER (!isBlank(?ee)) .
+                FILTER (strlen(?ee)>0)
                 FILTER (lang(?label) = '${lang}')
       OPTIONAL {        
-        ?iri dbnary:describes ?ee . 
-        ?ee rdf:type dbetym:EtymologyEntry .    
+        ?iri rdf:type dbetym:EtymologyEntry .
+        ?iri dbetym:etymologicallyRelatedTo ?ee    
       }
-    } 
+    }  
   `;
   sparqlQuery(query, function (data) {
     callback(data.results.bindings.map(x => {
-      return {word: x.label.value, uri: x.ee.value}
+      return {word: x.label.value}
     }));
   });
 }
