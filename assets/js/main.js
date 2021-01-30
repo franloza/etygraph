@@ -323,8 +323,11 @@ $(document).ready(function () {
     noResultsText: i18n.t('message.no_results'),
     events: {
         search: function (qry, callback) {
+            var locale_data = app.locale_data[app.locale];
+            var qry = qry.replace(/´/g, '')
             if (qry.trim().split(' ')[0].length >= 4) {
-              getWords(qry.toLowerCase(), app.locale_data[app.locale].lang, function(data) {
+              getWords(qry.toLowerCase(),  
+                locale_data.label_lang === undefined ? locale_data.lang : locale_data.label_lang, function(data) {
                 callback(data.map(x => {return x.word}));
               });
           }

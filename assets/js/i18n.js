@@ -225,6 +225,7 @@ export const locale_data = {
     en: {
         flag: 'gb',
         lang: 'eng',
+        label_lang: ['en', 'eng'],
         name: 'english'
     }, 
     es:  {
