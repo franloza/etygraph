@@ -13,7 +13,7 @@ var app = new Vue({
   },
   data: {
     // Default variables
-    app_version: "1.1.0",
+    app_version: "1.1.1",
     query: '',
     graph: {
       raw: {},
@@ -156,18 +156,28 @@ function searchWord(){
           }; 
           app.graph.raw[node.id] = node;
         },
-        function(graph, last_node_id){
-          if (app.graph.raw === undefined) {
-            app.graph.raw = {};
-          };
-          if ((Object.keys(graph).length == 0) && app.graph.raw[last_node_id] !== undefined) {
-            // The query was already in the graph
-            app.query_node_ids.add(last_node_id);
+        function(graph, last_node_id, no_results){
+          if (no_results) {
+             if(/[A-Z]/.test(app.query)) {
+               app.query = app.query.toLowerCase();
+               searchWord()
+             } else {
+              app.loading = false;
+             }
           }
-          var raw_graph =  jQuery.extend(true, { }, app.graph.raw);
-          app.graph.merged = mergeEquivalentNodes(raw_graph);
-          app.loading = false;
-          Vue.nextTick(drawDAG);
+          else {
+            if (app.graph.raw === undefined) {
+              app.graph.raw = {};
+            };
+            if ((Object.keys(graph).length == 0) && app.graph.raw[last_node_id] !== undefined) {
+              // The query was already in the graph
+              app.query_node_ids.add(last_node_id);
+            }
+            var raw_graph =  jQuery.extend(true, { }, app.graph.raw);
+            app.graph.merged = mergeEquivalentNodes(raw_graph);
+            app.loading = false;
+            Vue.nextTick(drawDAG);
+          }   
         },
         app.settings.extended_search,
         true,
