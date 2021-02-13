@@ -13,7 +13,7 @@ var app = new Vue({
   },
   data: {
     // Default variables
-    app_version: "1.1.1",
+    app_version: "1.1.2",
     query: '',
     graph: {
       raw: {},
@@ -157,15 +157,7 @@ function searchWord(){
           app.graph.raw[node.id] = node;
         },
         function(graph, last_node_id, no_results){
-          if (no_results) {
-             if(/[A-Z]/.test(app.query)) {
-               app.query = app.query.toLowerCase();
-               searchWord()
-             } else {
-              app.loading = false;
-             }
-          }
-          else {
+          var draw = function() {
             if (app.graph.raw === undefined) {
               app.graph.raw = {};
             };
@@ -177,6 +169,17 @@ function searchWord(){
             app.graph.merged = mergeEquivalentNodes(raw_graph);
             app.loading = false;
             Vue.nextTick(drawDAG);
+          }
+          if (no_results) {
+             if(/[A-Z]/.test(app.query)) {
+               app.query = app.query.toLowerCase();
+               searchWord()
+             } else {
+                draw()
+             }
+          }
+          else {
+            draw()
           }   
         },
         app.settings.extended_search,
