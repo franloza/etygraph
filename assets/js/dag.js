@@ -1,9 +1,8 @@
-import {loadLanguageMap} from './data/load.js';
+import LANGUAGE_MAP from './data/language_codes.js';
 
 const DAG_ELEMENT_ID = 'dag-panel'
 const MODAL_ELEMENT_ID = 'node-modal'
 const DEFAULT_SCALE = 1;
-export const LANGUAGE_MAP = loadLanguageMap();
 
 var g = resetDAG()
 var root_node = undefined;

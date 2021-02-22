@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+# [1.1.4] - 2021-02-22
+### Fixed
+- Added some missing languages like Serbo-Croatian, specified in ISO 639-3 codes
+
+### Changed
+- Consolidate language codes in one single file to speed up load.
+
 # [1.1.3] - 2021-02-22
 ### Fixed
 - Remove self-loops when merge equivalent nodes option is disabled

@@ -1,8 +1,8 @@
 import {i18n, locale_data} from './i18n.js';
 import {getAncestors,getDescendants, getWords, getRandomWord, mergeEquivalentNodes} from './api/etytree.js';
 import {getPageFromURL, getHTMLContentFromPage} from './api/wiktionary.js';
-import {clearDAG, renderDAG, addNode, removeNode, zoomFitContent, zoomToRootNode, DAGisRendered, LANGUAGE_MAP, addEdges} from './dag.js';
-
+import {clearDAG, renderDAG, addNode, removeNode, zoomFitContent, zoomToRootNode, DAGisRendered, addEdges} from './dag.js';
+import LANGUAGE_MAP from './data/language_codes.js';
 
 var multiselect = Vue.component('vue-multiselect', window.VueMultiselect.default)
 
@@ -13,7 +13,7 @@ var app = new Vue({
   },
   data: {
     // Default variables
-    app_version: "1.1.3",
+    app_version: "1.1.4",
     query: '',
     graph: {
       raw: {},

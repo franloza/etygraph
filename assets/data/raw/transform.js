@@ -1,9 +1,9 @@
 import {getEtymologyLanguages} from './etymology_languages.js';
 
-export function loadLanguageMap() {
+export function transformLanguageMap() {
     var map = {};
     // Wiktionary data
-    d3.text(`./assets/data/language_codes.csv`, function(error, rows){
+    d3.text(`./assets/data/raw/language_codes.csv`, function(error, rows){
         if (error) {
             throw error;
         }
@@ -20,7 +20,7 @@ export function loadLanguageMap() {
       };
 
     // Enrich with ISO codes
-    d3.text(`./assets/data/language_codes_iso.csv`, function(error, rows){
+    d3.text(`./assets/data/raw/language_codes_iso.csv`, function(error, rows){
       if (error) {
         throw error;
       }
@@ -52,5 +52,19 @@ export function loadLanguageMap() {
         });      
       });
     });
+    // Enrich with ISO 639-3 Codes
+    d3.text(`./assets/data/raw/language_codes_iso_639.csv`, function(error, rows){
+      if (error) {
+          throw error;
+      }
+      var rows = d3.dsvFormat(";").parse(rows);
+      rows.forEach(function(line) {
+          var language_code = line['Id'];
+          var language_name = line['Inverted_Name'];
+          if (map[language_code] === undefined){
+            map[language_code] = language_name;
+          }      
+      });
+  });
     return map;
   }
