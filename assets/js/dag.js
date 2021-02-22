@@ -134,7 +134,8 @@ export function addEdges(data) {
   g.nodes().forEach(node_id => {
     if (data[node_id] !== undefined) {
       data[node_id].relative_ids.forEach(relative_node => {
-        if (g.nodes().includes(relative_node)) {
+        // Avoid adding dangling edges and self-loops
+        if (g.nodes().includes(relative_node) && relative_node != node_id) {
           g.setEdge(relative_node, node_id, {
             curve: d3.curveBasis
           })
