@@ -1,4 +1,4 @@
-import {i18n, locale_data} from './i18n.js';
+import {i18n, locale_data, label_lang_to_locale} from './i18n.js';
 import {getAncestors,getDescendants, getWords, getRandomWord, mergeEquivalentNodes} from './api/etytree.js';
 import {getPageFromURL, getHTMLContentFromPage} from './api/wiktionary.js';
 import {clearDAG, renderDAG, addNode, removeNode, zoomFitContent, zoomToRootNode, DAGisRendered, addEdges} from './dag.js';
@@ -13,7 +13,7 @@ var app = new Vue({
   },
   data: {
     // Default variables
-    app_version: "1.1.4",
+    app_version: "1.1.5",
     query: '',
     graph: {
       raw: {},
@@ -233,6 +233,7 @@ function drawDAG() {
     var filter_languages = (selected_langs.length > 0) && (app.settings.filter_languages);
     Object.values(graph).forEach(node => {
       node.is_queried = new Set([...app.query_node_ids].filter(x => node.merge_ids.has(x))).size > 0;
+      node.lang = (label_lang_to_locale[node.lang] === undefined) ? node.lang : label_lang_to_locale[node.lang];
       if (lang_to_node[node.lang] === undefined) {
         lang_to_node[node.lang] = [node.id];
       } else {

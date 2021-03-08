@@ -221,6 +221,11 @@ export const i18n = new VueI18n({
     fallbackLocale: 'en'
 })
 
+export const label_lang_to_locale = {
+    en: 'en',
+    eng: 'en'
+}
+
 export const locale_data = {
     en: {
         flag: 'gb',
